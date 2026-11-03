@@ -15,24 +15,37 @@ var HEADERS = TEXT_KEYS.concat(BOOL_KEYS);
 var MAX_LEN = 2000;
 var MAX_EVENTS = 300;
 
-// 一覧の取得（だれでも読める）
+// ページの表示。?api=1 のときは一覧をJSONで返す（GitHub Pages版から使う）
 function doGet(e) {
-  return json_({ ok: true, events: readAll_() });
+  if (e && e.parameter && e.parameter.api) return json_(apiList());
+  return HtmlService.createHtmlOutputFromFile('Index')
+    .setTitle('有事アナウンスマニュアル')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1, viewport-fit=cover');
 }
 
-// 追加・更新・削除（パスコードが必要）
+// 追加・更新・削除（GitHub Pages版から使う）
 function doPost(e) {
   var req;
   try { req = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: 'bad_request' }); }
-  if (!checkPasscode_(req.passcode)) return json_({ ok: false, error: 'passcode' });
+  return json_(apiPost(req));
+}
 
+// 一覧の取得（だれでも読める）。Apps Script版のページからは google.script.run で呼ぶ
+function apiList() {
+  return { ok: true, events: readAll_() };
+}
+
+// 追加・更新・削除（パスコードが必要）
+function apiPost(req) {
+  if (!req || typeof req !== 'object') return { ok: false, error: 'bad_request' };
+  if (!checkPasscode_(req.passcode)) return { ok: false, error: 'passcode' };
   var lock = LockService.getScriptLock();
-  if (!lock.tryLock(10000)) return json_({ ok: false, error: 'busy' });
+  if (!lock.tryLock(10000)) return { ok: false, error: 'busy' };
   try {
-    if (req.action === 'verify') return json_({ ok: true });
-    if (req.action === 'save') return json_(saveEvent_(req.event));
-    if (req.action === 'delete') return json_(deleteEvent_(req.id));
-    return json_({ ok: false, error: 'bad_request' });
+    if (req.action === 'verify') return { ok: true };
+    if (req.action === 'save') return saveEvent_(req.event);
+    if (req.action === 'delete') return deleteEvent_(req.id);
+    return { ok: false, error: 'bad_request' };
   } finally {
     lock.releaseLock();
   }

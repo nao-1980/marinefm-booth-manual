@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>有事アナウンスマニュアル</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+body{margin:0}
+[hidden]{display:none!important}
+/* Layout: radio-station site feel — white masthead, sky-blue tab bar, light grey ground, white content panels; red only for life-safety items */
+:root{
+  --ground:#f3f6f8; --panel:#ffffff; --ink:#2b3138; --muted:#5d6a76; --line:#dbe5ec;
+  --sky:#0091db; --deep:#0b6fbd; --navy:#1a477c; --mist:#e3f2fb; --foot:#62b8e4;
+  --alert:#c62f2f; --alert-bg:#fdeeee; --quote:#f2f8fc;
+  --display:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0f1720; --panel:#16212c; --ink:#e4ebf1; --muted:#9fb0bf; --line:#263646;
+  --sky:#1a8fd0; --deep:#5bb5ec; --navy:#8cc8f0; --mist:#14324a; --foot:#123c5a;
+  --alert:#ff7b7b; --alert-bg:#3a1a1c; --quote:#132a3c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ground:#0f1720; --panel:#16212c; --ink:#e4ebf1; --muted:#9fb0bf; --line:#263646;
+  --sky:#1a8fd0; --deep:#5bb5ec; --navy:#8cc8f0; --mist:#14324a; --foot:#123c5a;
+  --alert:#ff7b7b; --alert-bg:#3a1a1c; --quote:#132a3c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.8}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.mast{background:var(--panel);border-bottom:1px solid var(--line)}
+header.mast .wrap{padding-block:22px 18px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.freq{font-family:var(--display);font-weight:800;color:var(--deep);font-size:13px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+.freq b{background:var(--deep);color:#fff;border-radius:4px;padding:1px 8px;font-size:14px}
+h1{font-family:var(--display);font-weight:800;color:var(--deep);font-size:clamp(24px,4.4vw,36px);line-height:1.3;margin:4px 0 0;text-wrap:balance}
+.lead{color:var(--muted);margin:6px 0 0;font-size:14px}
+.credit-top{font-size:12px;color:var(--muted);text-align:right}
+.credit-top strong{display:block;color:var(--navy);font-family:var(--display);font-size:15px;letter-spacing:.06em}
+nav.tabs{background:var(--sky);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sky)}
+nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:8px;align-items:flex-end}
+nav.tabs a{color:#fff;text-decoration:none;font-family:var(--display);font-weight:700;font-size:14px;padding:9px 20px 10px;white-space:nowrap;border-radius:8px 8px 0 0;background:rgba(255,255,255,.16);opacity:.92}
+nav.tabs a:hover{background:rgba(255,255,255,.28);opacity:1}
+nav.tabs a[aria-current="page"]{background:var(--ground);color:var(--deep);opacity:1;padding-top:11px;font-size:15px}
+.vlabel{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;color:var(--deep);font-size:13px;letter-spacing:.06em}
+.vlabel::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--sky)}
+nav.tabs a:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+main .wrap{padding-block:24px 40px;display:grid;gap:20px}
+section.panel{background:var(--panel);border:1px solid var(--line);padding:22px clamp(16px,3vw,28px);min-width:0}
+h2{font-family:var(--display);font-weight:800;color:var(--navy);font-size:20px;margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid var(--mist);display:flex;gap:10px;align-items:baseline;text-wrap:balance}
+h2 .no{color:var(--sky);font-size:15px}
+h3{font-family:var(--display);font-weight:700;color:var(--deep);font-size:16px;margin:18px 0 6px}
+p{margin:0 0 10px;max-width:68ch}
+ul,ol{margin:0 0 10px;padding-left:1.4em}
+li{margin:2px 0}
+.tbl{overflow-x:auto;margin:8px 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--mist);color:var(--navy);font-weight:700;white-space:nowrap}
+td.blank{height:34px}
+.card{background:var(--quote);border-left:4px solid var(--sky);padding:10px 14px;margin:6px 0 10px}
+.card.red{background:var(--alert-bg);border-left-color:var(--alert)}
+.card .lbl{font-family:var(--display);font-weight:700;font-size:13px;color:var(--deep);display:block;margin-bottom:2px}
+.card.red .lbl{color:var(--alert)}
+.card p{margin:0}
+.note{font-size:13px;color:var(--muted)}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;border-radius:3px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.badge.now{background:var(--alert);color:#fff}
+.flow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 12px}
+.flow .col{display:grid;gap:8px;align-content:start}
+.flow .step{border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-size:14px;background:var(--panel)}
+.flow .head{font-family:var(--display);font-weight:700;font-size:13px;padding:6px 12px;border-radius:6px}
+.flow .a .head{background:var(--alert);color:#fff}
+.flow .b .head{background:var(--sky);color:#fff}
+.flow .arrow{color:var(--muted);text-align:center;font-size:12px;line-height:1}
+.promise{counter-reset:p;list-style:none;padding:0;display:grid;gap:6px}
+.promise li{counter-increment:p;display:block;position:relative;padding-left:36px;margin:0}
+.promise li::before{content:counter(p);position:absolute;left:0;top:3px;font-family:var(--display);font-weight:800;background:var(--deep);color:#fff;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;font-size:13px}
+.check{list-style:none;padding:0}
+.check li{padding-left:26px;position:relative}
+.check li::before{content:"";position:absolute;left:2px;top:6px;width:14px;height:14px;border:1.5px solid var(--deep);border-radius:3px}
+.kid{margin:10px 0 14px}.kid-h{background:var(--deep);color:#fff;font-family:var(--display);font-weight:700;padding:4px 12px}.kid .tbl{margin:0}table.kidt th{width:22%;white-space:normal}table.kidt td{width:28%;height:38px}td.hint{color:var(--muted);font-size:12px}
+.ev-list{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.ev{display:grid;gap:6px;border:1px solid var(--line);border-top:4px solid var(--sky);padding:14px 16px;background:var(--panel);text-decoration:none;color:var(--ink)}
+.ev:hover{border-color:var(--sky)}
+.ev .d{font-family:var(--display);font-weight:700;color:var(--deep);font-size:13px;letter-spacing:.04em}
+.ev .t{font-family:var(--display);font-weight:800;font-size:17px;line-height:1.4;color:var(--navy)}
+.ev .m{font-size:13px;color:var(--muted)}
+.ev.tpl{border-top-color:var(--muted);border-style:dashed;border-top-style:solid}
+.crumb{font-size:13px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.btn{display:inline-block;background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:6px 14px;border-radius:4px}
+.ph{color:var(--alert);font-weight:700}
+.ev-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 14px}
+button.btn{border:0;cursor:pointer;font-family:var(--body)}
+.btn.ghost{background:transparent;color:var(--deep);border:1.5px solid var(--deep)}
+.btn.danger{background:var(--alert);color:#fff;border-color:var(--alert)}
+.btn.ghost.danger{background:transparent;color:var(--alert)}
+.btn:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:wait}
+.evform h3{margin-top:22px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+.fld{display:grid;gap:4px;font-size:13px;min-width:0;border:0;margin:0;padding:0}
+.fld.wide{grid-column:1/-1}
+.fld>span,.fld>legend{font-weight:700;color:var(--navy)}
+.fld input[type=text],.fld input[type=date],.fld input[type=password],.passin,.fld textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+.fld input:focus,.fld textarea:focus{outline:none;border-color:var(--sky)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 16px}
+.opt{display:inline-flex;gap:6px;align-items:center;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);cursor:pointer}
+fieldset.fld{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+fieldset.fld legend{width:100%;margin-bottom:4px}
+.req{font-style:normal;font-size:11px;color:#fff;background:var(--alert);border-radius:3px;padding:0 5px;margin-left:4px}
+.formbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
+.err{color:var(--alert)}
+.passin{width:auto!important;max-width:200px;padding:5px 8px!important;font-size:14px!important}
+.tbd{color:var(--alert);font-weight:700}
+.evhead{display:grid;gap:2px}
+.evhead .d{font-family:var(--display);font-weight:700;color:var(--deep);font-size:13px}
+.evtitle{font-size:24px;border:0;padding:0;margin:0}
+.evbody{display:grid;gap:20px}
+#ev-tools{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}}
+a{color:var(--deep)}
+footer.foot{background:var(--foot);color:#fff}
+footer.foot .wrap{padding-block:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:13px}
+footer.foot strong{font-family:var(--display);letter-spacing:.08em}
+@media (max-width:640px){.flow{grid-template-columns:1fr}.credit-top{text-align:left}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="freq"><b>86.1MHz</b>マリンFM 案内放送ブース</div>
+      <h1>有事アナウンス対応マニュアル</h1>
+      <p class="lead">地域イベントのブースで、災害などの有事に来場者の命を守る放送を届けるための手順書です。</p>
+    </div>
+    <div class="credit-top">資料作成<strong>NAYA WORKS</strong>2026年11月3日版</div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="版の切り替え">
+  <div class="wrap">
+    <a href="#outdoor" data-view="outdoor">屋外版</a>
+    <a href="#indoor" data-view="indoor">屋内版</a>
+    <a href="#events" data-view="events">イベント版</a>
+  </div>
+</nav>
+
+<main>
+<!-- ============ 屋外版 ============ -->
+<div class="wrap view" id="v-outdoor">
+  <div class="crumb"><span class="vlabel">屋外版　｜　屋外イベント用の共通マニュアル</span><a class="btn" href="https://nao-1980.github.io/marinefm-booth-manual/booth-outdoor-a4.pdf" target="_blank" rel="noopener">A4印刷用PDF（8ページ）</a></div>
+  <section class="panel">
+    <h2><span class="no">01</span>目的と基本方針</h2>
+    <p>ブースの最優先任務は、有事に来場者の命を守るアナウンスを「正しく・早く・落ち着いて」届けることです。通常の案内放送や番組進行より、常にこちらを優先します。このタブは<strong>屋外イベント用</strong>で、どのイベントでも共通で使います。開催ごとに変わる情報は7章だけを書き換えます。海や川に近い会場では、地震時は<strong>津波を最優先で想定</strong>します。</p>
+    <h3>ブースの5つの約束</h3>
+    <ol class="promise">
+      <li>命に関わる情報は、すべての放送・進行を止めて最優先で流す</li>
+      <li>放送するのは「公式の一次情報」と「主催本部の指示」だけ。噂・SNSの未確認情報は流さない</li>
+      <li>避難の判断と指示は主催本部が出す。ブースは「伝える役」に徹する（例外は3章の即時放送のみ）</li>
+      <li>来場者を不安にさせない声と言葉で、短く・繰り返し伝える</li>
+      <li>スタッフ自身の安全を確保したうえで放送する。危険が迫ったらブースも避難する</li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">02</span>体制と役割分担</h2>
+    <p>指揮系統は「主催本部 → ブース責任者 → アナウンサー」の一本線です。指示の出どころを1つに絞り、矛盾した放送を防ぎます。</p>
+    <div class="tbl"><table>
+      <tr><th>役割</th><th>担当者</th><th>主な仕事</th></tr>
+      <tr><td>ブース責任者</td><td class="blank"></td><td>本部との連絡窓口。放送内容の最終OK、ブース避難の判断</td></tr>
+      <tr><td>アナウンサー（メイン）</td><td class="blank"></td><td>文例に沿って読み上げ。指示がない限りアドリブしない</td></tr>
+      <tr><td>アナウンサー（サブ）</td><td class="blank"></td><td>交代・休憩要員。英語アナウンス担当</td></tr>
+      <tr><td>情報担当</td><td class="blank"></td><td>気象庁・自治体の情報確認、放送記録、時刻管理</td></tr>
+      <tr><td>機材担当</td><td class="blank"></td><td>マイク・スピーカー・電源・予備電源の確保</td></tr>
+    </table></div>
+    <p class="note">少人数なら「責任者＋情報担当」「アナウンサー＋機材担当」の2名体制でも回せます。連絡先（主催本部・警備責任者・救護所・マリンFM担当者）は当日朝までに控えます。</p>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">03</span>判断フロー：誰の指示で・いつ放送するか</h2>
+    <p>原則は本部の指示を待ってから放送します。ただし命に関わる速報・警報は、数十秒の遅れが命取りになるため、ブース判断で即放送します。この例外は事前に主催者の了承を取ります。</p>
+    <div class="flow">
+      <div class="col a">
+        <div class="head">即放送：緊急地震速報・大津波警報・津波警報・Jアラート</div>
+        <div class="step">すぐ放送（5-1・5-3・5-9）</div><div class="arrow">▼</div>
+        <div class="step">放送後すぐ本部へ報告</div><div class="arrow">▼</div>
+        <div class="step">危険が迫ればスタッフも避難</div>
+      </div>
+      <div class="col b">
+        <div class="head">それ以外：本部の指示を待つ</div>
+        <div class="step">公式情報2つで確認（4章）</div><div class="arrow">▼</div>
+        <div class="step">責任者が本部へ報告・指示を待つ</div><div class="arrow">▼</div>
+        <div class="step">指示どおり文例で放送（5章）→ 記録（9章）</div>
+      </div>
+    </div>
+    <h3>屋外の天候判断の目安</h3>
+    <div class="tbl"><table>
+      <tr><th>事態</th><th>放送・中断の合図</th><th>確認先</th></tr>
+      <tr><td>雷</td><td>雷鳴が聞こえる、稲光が見えたら即中断を提案（5-5）</td><td>気象庁 雷ナウキャスト、雷注意報</td></tr>
+      <tr><td>強風</td><td>のぼり・テントがあおられ始めたら注意喚起（5-5-2）。主催者の基準を超えたら中断</td><td>風の予報、強風注意報</td></tr>
+      <tr><td>大雨</td><td>足元が悪くなったら注意喚起（5-5-4）。警報級なら中断</td><td>キキクル、大雨警報</td></tr>
+      <tr><td>熱中症</td><td>熱中症警戒アラートの日は1時間おきに呼びかけ（5-5-3）</td><td>環境省 暑さ指数</td></tr>
+    </table></div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">04</span>情報の入手先</h2>
+    <p>放送してよいのは公式情報だけです。情報担当は<strong>2つ以上の公式ソースで一致を確認</strong>してから責任者に渡します（緊急地震速報・大津波警報は確認を待たず即放送）。</p>
+    <div class="tbl"><table>
+      <tr><th>情報</th><th>入手先</th><th>準備</th></tr>
+      <tr><td>緊急地震速報・Jアラート</td><td>スマホの緊急速報</td><td>全スタッフ受信ON・マナーモードでも鳴る設定</td></tr>
+      <tr><td>津波警報・地震情報</td><td>気象庁、NHKニュース・防災アプリ</td><td>アプリを事前に入れる</td></tr>
+      <tr><td>避難指示など自治体の情報</td><td>開催自治体の防災メール・公式サイト（横浜市なら防災情報Eメール）</td><td>事前に登録</td></tr>
+      <tr><td>沿岸の屋外スピーカー</td><td>横浜市沿岸は津波警報伝達システム</td><td>聞こえたらメモして本部へ</td></tr>
+      <tr><td>気象（雷・突風・大雨）</td><td>キキクル・雷ナウキャスト</td><td>当日朝と2時間おきに確認</td></tr>
+      <tr><td>会場内の事故・急病・迷子</td><td>主催本部・警備・救護</td><td>無線か電話で受ける</td></tr>
+      <tr><td>放送そのもの</td><td>マリンFM 86.1MHz</td><td>電池式ラジオを1台置く</td></tr>
+    </table></div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">05</span>事態別アナウンス文例</h2>
+    <p>「呼びかけ → 何が起きたか → 今すぐしてほしいこと → 繰り返し」の4段で統一しています。【 】は責任者が埋めてから渡します。</p>
+    <div class="card red"><span class="lbl">5-1 地震（揺れている最中）<span class="badge now">即放送</span></span><p>地震です。落ち着いてください。頭を守って、その場でしゃがんでください。テントや看板、ガラスから離れてください。揺れがおさまるまで、動かないでください。（繰り返す）</p></div>
+    <div class="card"><span class="lbl">5-2 揺れがおさまった直後</span><p>揺れはおさまりました。お近くのスタッフの指示に従い、落ち着いて行動してください。ここは海の近くです。この後の津波の情報を、この放送でお伝えします。走らず、その場でお待ちください。</p></div>
+    <div class="card red"><span class="lbl">5-3 大津波警報・津波警報<span class="badge now">即放送</span></span><p>緊急放送です。【大津波警報／津波警報】が発表されました。ただちに海から離れてください。【◯◯方面】へ、高い場所や頑丈な建物の3階以上へ避難してください。荷物は置いて、今すぐ避難してください。（繰り返す。放送後、スタッフも避難）</p></div>
+    <div class="card"><span class="lbl">5-4 津波注意報</span><p>お知らせします。【神奈川県東京湾内湾】に津波注意報が発表されました。海岸や岸壁には近づかないでください。今後の情報は、この放送でお伝えします。</p></div>
+    <div class="card"><span class="lbl">5-5 雷・突風・大雨（イベント中断）</span><p>お知らせします。【雷／強い風】が近づいているため、イベントを一時中断します。テントや木、ポールのそばから離れ、【◯◯（屋内の待機場所）】へ移動してください。再開する場合は、この放送でお知らせします。</p></div>
+    <div class="card"><span class="lbl">5-5-2 強風（テント・のぼり）</span><p>お知らせします。風が強くなっています。テントやのぼり、看板のそばから離れてください。出店者の皆さまは、テントの固定をもう一度ご確認ください。</p></div>
+    <div class="card"><span class="lbl">5-5-3 熱中症予防</span><p>お知らせします。今日は気温が高くなっています。こまめに水分と塩分をとり、日かげで休んでください。気分が悪くなった方は、お近くのスタッフか救護所【◯◯】へお声がけください。</p></div>
+    <div class="card"><span class="lbl">5-5-4 雨・足元</span><p>お知らせします。雨で足元がすべりやすくなっています。走らず、ゆっくりお歩きください。お子さま連れの方は、手をつないでお進みください。</p></div>
+    <div class="card"><span class="lbl">5-6 火災</span><p>緊急放送です。会場内の【◯◯付近】で火災が発生しました。煙を吸わないよう、口と鼻をおおって、【◯◯方面】へ避難してください。スタッフの誘導に従ってください。</p></div>
+    <div class="card"><span class="lbl">5-7 急病人・けが人</span><p>お知らせします。【◯◯付近】で、手当てが必要な方がいらっしゃいます。医師・看護師の方がいらっしゃいましたら、お近くのスタッフにお声がけください。救護所は【◯◯】にあります。</p></div>
+    <p class="note">病状や個人が特定できる情報は放送しません。</p>
+    <div class="card"><span class="lbl">5-8 迷子</span><p>迷子のお知らせです。【◯色の服】を着た、【◯歳くらいの男の子／女の子】が、【◯◯】でお待ちです。お心当たりの方は、【◯◯】までお越しください。</p></div>
+    <p class="note">子どもの名前は放送しません（連れ去り防止）。</p>
+    <div class="card red"><span class="lbl">5-9 Jアラート（弾道ミサイル）<span class="badge now">即放送</span></span><p>緊急放送です。ミサイルが発射されたとの情報がありました。近くの頑丈な建物か地下に避難してください。建物がない場合は、物かげに身を隠すか、地面に伏せて頭を守ってください。</p></div>
+    <div class="card"><span class="lbl">5-10 中止・再開・帰宅案内</span><p>【◯◯のため、本日のイベントは中止します／◯時◯分から再開します】。お帰りの際は、【交通機関の状況】をご確認ください。スタッフの誘導に従って、ゆっくりお進みください。</p></div>
+    <div class="card"><span class="lbl">5-11 英語</span><p>Earthquake. Please stay calm, crouch down, and protect your head.<br>Tsunami warning. Move away from the sea now. Evacuate to high ground or the third floor or higher of a strong building.</p></div>
+    <div class="card"><span class="lbl">5-12 電車が止まったとき（帰宅困難）</span><p>お知らせします。現在、電車が止まっています。むやみに移動せず、安全な場所でお待ちください。休憩できる施設については、お近くのスタッフにおたずねください。最新の情報は、マリンFM 86.1MHzでもお伝えします。</p></div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">06</span>話し方ルール</h2>
+    <p>「ゆっくり・短く・言い切る・繰り返す」の4つを守れば十分です。</p>
+    <ul>
+      <li><strong>ゆっくり</strong>：普段の番組より一段低い声で。焦りは声で伝染します</li>
+      <li><strong>短く</strong>：1文に1つの行動だけ</li>
+      <li><strong>言い切る</strong>：「たぶん」は使わない。わからないことは「確認中です。わかり次第お伝えします」</li>
+      <li><strong>繰り返す</strong>：最低2回。重要なものは数分おきに</li>
+      <li><strong>命令形をためらわない</strong>：津波・火災では「今すぐ避難してください」</li>
+      <li><strong>BGMは止める</strong>：緊急放送の前に音楽・番組音声はすべて止める</li>
+      <li><strong>やさしい日本語</strong>：「直ちに」より「今すぐ」、「高台」より「高い場所」</li>
+      <li><strong>放送しないこと</strong>：未確認情報、被害の推測、個人名、責任の所在</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">07</span>イベント別シート（開催ごとに記入）</h2>
+    <h3>7-1 基本情報</h3>
+    <div class="tbl"><table>
+      <tr><th>項目</th><th>記入</th></tr>
+      <tr><td>イベント名・開催日時</td><td class="blank"></td></tr>
+      <tr><td>会場名・住所</td><td class="blank"></td></tr>
+      <tr><td>海・川からの距離、会場の海抜</td><td class="blank"></td></tr>
+      <tr><td>主催者名・本部の位置</td><td class="blank"></td></tr>
+      <tr><td>来場者の特徴（子ども連れ・高齢者・外国人）</td><td class="blank"></td></tr>
+    </table></div>
+    <h3>7-2 会場タイプ別の想定リスク</h3>
+    <div class="tbl"><table>
+      <tr><th>会場タイプ</th><th>最優先で想定する事態</th><th>ブースの動き方</th></tr>
+      <tr><td>屋外の公園・広場・商店街（標準）</td><td>雷、強風、大雨、夏は熱中症</td><td>3章の天候判断で動く。中断・再開の基準を主催者と事前に決める</td></tr>
+      <tr><td>屋外・海沿い</td><td>上記＋津波</td><td>地震後は津波情報を最優先。5-3の避難方向を必ず記入</td></tr>
+      <tr><td>屋外・川沿いや低地</td><td>上記＋大雨による増水</td><td>洪水キキクルを2時間おきに確認</td></tr>
+      <tr><td>屋外・駅前など人通りの多い場所</td><td>上記＋群衆の混乱・転倒</td><td>「走らないでください」を繰り返す</td></tr>
+    </table></div>
+    <h3>7-3 避難情報</h3>
+    <ul>
+      <li>開催自治体のハザードマップで、会場が浸水想定区域か確認</li>
+      <li>会場周辺の海抜表示・津波避難情報板を現地で確認</li>
+      <li><strong>地域団体の防災マップがあれば最優先で使う</strong>（記入例：関内フード&amp;ハイカラフェスタ版）</li>
+      <li>横浜市の津波避難の目安は、海抜5m以上の高い場所か、頑丈な建物の3階以上</li>
+    </ul>
+    <div class="tbl"><table>
+      <tr><th>項目</th><th>内容</th></tr>
+      <tr><td>津波・洪水時の避難方向</td><td class="blank"></td></tr>
+      <tr><td>最寄りの避難場所・津波避難施設</td><td class="blank"></td></tr>
+      <tr><td>雷・突風時の屋内待機場所</td><td class="blank"></td></tr>
+      <tr><td>救護所・迷子の待機場所</td><td class="blank"></td></tr>
+      <tr><td>ブースから本部までの経路</td><td class="blank"></td></tr>
+    </table></div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">08</span>事前準備・当日チェック</h2>
+    <h3>前日まで</h3>
+    <ul class="check">
+      <li>主催者と「誰の指示で緊急放送するか」を文書で確認</li>
+      <li>7章を記入し、5章の【 】を埋めた読み上げカードを印刷（A5・ラミネート推奨）</li>
+      <li>全スタッフのスマホで緊急速報ON、防災アプリ・自治体の防災メール登録</li>
+      <li>スタッフ全員でこのマニュアルを読み合わせ（15分）</li>
+    </ul>
+    <h3>当日朝（開場前）</h3>
+    <ul class="check">
+      <li>本部・警備・救護の担当者と顔合わせ、連絡先を交換</li>
+      <li>ブースから本部・避難方向まで実際に歩いて確認</li>
+      <li>音が会場の端まで届くか、予備電源で放送できるか確認</li>
+      <li>天気（雷・風）を確認し、責任者に共有</li>
+      <li>読み上げカードをマイクのすぐ横に置く</li>
+    </ul>
+    <h3>ブースに置くもの</h3>
+    <ul class="check">
+      <li>読み上げカード・マニュアル印刷版・避難方向を書いた会場マップ</li>
+      <li>電池式ラジオ、ハンドマイク（拡声器）、モバイルバッテリー、予備電池</li>
+      <li>ホイッスル、懐中電灯、軍手、筆記用具・放送記録用紙</li>
+      <li>屋外装備：テントのおもり、機材の防水カバー、ケーブルの防水処理、飲料水</li>
+      <li>雷のときは金属のスタンドや支柱から離れ、ハンドマイクだけで放送する段取り</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">09</span>事後対応・記録</h2>
+    <div class="tbl"><table>
+      <tr><th>時刻</th><th>事態</th><th>情報源・指示者</th><th>放送内容（文例番号）</th><th>放送者</th></tr>
+      <tr><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
+    </table></div>
+    <ol>
+      <li>「解除」「再開」も本部の指示を受けてから放送する（5-10）</li>
+      <li>当日中に主催者とマリンFMへ、記録をもとに報告</li>
+      <li>1週間以内に振り返り、このマニュアルを更新</li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2><span class="no">10</span>主催者・マリンFMに確認すること</h2>
+    <ul class="check">
+      <li>緊急放送の指示権限は誰か。本部と連絡が取れないとき、ブース判断で即放送してよい範囲</li>
+      <li>ブースの音が会場全体に届くか。届かないエリアの伝達方法</li>
+      <li>主催者の既存の緊急対応マニュアル・避難計画の有無</li>
+      <li>雷・強風での中断・中止の基準</li>
+      <li>救護所・迷子センター・本部の位置、本部との連絡手段（無線の貸与）</li>
+      <li>有事の際、マリンFMの電波でも同じ情報を流すか</li>
+      <li>英語以外の言語対応の要否、当日のスタッフ人数と役割</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============ 屋内版 ============ -->
+<div class="wrap view" id="v-indoor" hidden>
+  <div class="crumb"><span class="vlabel">屋内版　｜　ホール・施設内イベント用の共通マニュアル</span><a class="btn" href="https://nao-1980.github.io/marinefm-booth-manual/booth-indoor-a4.pdf" target="_blank" rel="noopener">A4印刷用PDF（4ページ）</a></div>
+  <section class="panel">
+    <h2><span class="no">01</span>目的と基本方針</h2>
+    <p>屋内では<strong>施設の館内放送と防災センターが最優先</strong>で、ブースは補助役に回ります。任務は、館内放送と矛盾しない形で来場者を落ち着かせ、指示を確実に届けることです。</p>
+    <ol class="promise">
+      <li>館内放送が流れたら、ブースの音楽・放送をすぐ止めて館内放送を聞かせる</li>
+      <li>ブースが放送するのは館内放送の<strong>復唱と補足</strong>だけ。独自の避難指示は出さない</li>
+      <li>出口への殺到を防ぐ。「走らない」「押さない」を繰り返す</li>
+      <li>エレベーターは使わせない。避難は階段で</li>
+      <li>スタッフ自身の安全を確保し、避難指示が出たらブースも避難する</li>
+    </ol>
+  </section>
+  <section class="panel">
+    <h2><span class="no">02</span>体制と役割分担</h2>
+    <p>指揮系統は「<strong>施設の防災センター → 主催本部 → ブース責任者 → アナウンサー</strong>」です。屋外版より1段上に施設が入ります。</p>
+    <div class="tbl"><table>
+      <tr><th>役割</th><th>担当者</th><th>主な仕事</th></tr>
+      <tr><td>ブース責任者</td><td class="blank"></td><td>本部・防災センターとの連絡窓口。放送内容の最終OK</td></tr>
+      <tr><td>アナウンサー（メイン）</td><td class="blank"></td><td>館内放送の復唱・補足</td></tr>
+      <tr><td>アナウンサー（サブ）</td><td class="blank"></td><td>交代要員・英語担当</td></tr>
+      <tr><td>情報担当</td><td class="blank"></td><td>館内放送の内容をメモ、公式情報の確認、記録</td></tr>
+      <tr><td>誘導補助</td><td class="blank"></td><td>ブース周辺の来場者を非常口・階段へ案内</td></tr>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2><span class="no">03</span>判断フロー</h2>
+    <p>屋内では<strong>館内放送が流れたかどうか</strong>が最初の分かれ目です。</p>
+    <ol>
+      <li><strong>緊急地震速報・揺れ</strong> → ブース判断ですぐ6-1を放送（身を守る行動だけ）</li>
+      <li><strong>館内放送が流れた</strong> → ブースの音を止める → 終わったら6章の文例で復唱・補足</li>
+      <li><strong>館内放送がない／聞こえない</strong> → 責任者が本部・防災センターに確認 → 指示どおり放送</li>
+      <li><strong>火災報知器が鳴った</strong> → 誤報の可能性もあるため確認を待つ。その間は6-4だけを流す</li>
+      <li>放送したら必ず記録（9章）</li>
+    </ol>
+  </section>
+  <section class="panel">
+    <h2><span class="no">04–05</span>情報の入手先と話し方</h2>
+    <div class="tbl"><table>
+      <tr><th>情報</th><th>入手先</th><th>準備</th></tr>
+      <tr><td>避難・火災・停電の指示</td><td>館内放送、防災センター</td><td>内線・電話番号を控える</td></tr>
+      <tr><td>緊急地震速報・Jアラート</td><td>スマホの緊急速報</td><td>全スタッフ受信ON</td></tr>
+      <tr><td>津波・地震情報</td><td>気象庁、NHK・防災アプリ</td><td>事前にアプリを入れる</td></tr>
+      <tr><td>停電・通信障害時</td><td>電池式ラジオ（マリンFM 86.1MHz）</td><td>1台置く</td></tr>
+    </table></div>
+    <ul>
+      <li><strong>館内放送と重ねない</strong>：館内放送中は必ず黙る</li>
+      <li><strong>反響を意識する</strong>：さらにゆっくり、音量は控えめに</li>
+      <li><strong>「出口」より「方向」</strong>：館内放送が示した方向・非常口を具体的に言う</li>
+      <li>ブースの位置でスマホの電波を事前に確認し、弱ければ無線を借りる</li>
+    </ul>
+  </section>
+  <section class="panel">
+    <h2><span class="no">06</span>事態別アナウンス文例（屋内）</h2>
+    <div class="card red"><span class="lbl">6-1 地震（揺れている最中）<span class="badge now">即放送</span></span><p>地震です。落ち着いてください。照明や窓ガラス、棚から離れて、頭を守ってください。揺れがおさまるまで、その場から動かないでください。あわてて外に出ないでください。（繰り返す）</p></div>
+    <div class="card"><span class="lbl">6-2 揺れがおさまった直後</span><p>揺れはおさまりました。館内放送と、お近くのスタッフの指示に従ってください。エレベーターは使わないでください。今後の情報は、館内放送とこの放送でお伝えします。</p></div>
+    <div class="card"><span class="lbl">6-3 火災（館内放送のあと）</span><p>ただいまの館内放送のとおり、【◯階◯◯付近】で火災が発生しました。口と鼻をおおい、姿勢を低くして、【◯◯の非常口／階段】から避難してください。エレベーターは使わないでください。走らず、押さずにお進みください。</p></div>
+    <div class="card"><span class="lbl">6-4 火災報知器が鳴ったが、館内放送がまだない</span><p>現在、状況を確認しています。館内放送をお待ちください。落ち着いて、その場でお待ちください。</p></div>
+    <div class="card"><span class="lbl">6-5 停電</span><p>停電しています。落ち着いてください。非常灯がつくまで、その場から動かないでください。足元に気をつけて、スタッフの案内をお待ちください。</p></div>
+    <div class="card red"><span class="lbl">6-6 津波（沿岸の施設）</span><p>緊急放送です。【大津波警報／津波警報】が発表されました。外には出ないでください。館内放送の案内に従い、階段で【◯階以上】へ避難してください。</p></div>
+    <p class="note">上の階へ上がるか外へ出るかは施設の避難計画で決まっています。必ず事前に防災センターに確認します。</p>
+    <div class="card"><span class="lbl">6-7 急病人・けが人</span><p>お知らせします。【◯◯付近】で、手当てが必要な方がいらっしゃいます。医師・看護師の方がいらっしゃいましたら、お近くのスタッフにお声がけください。</p></div>
+    <div class="card"><span class="lbl">6-8 迷子</span><p>迷子のお知らせです。【◯色の服】を着た、【◯歳くらいの男の子／女の子】が、【◯◯】でお待ちです。お心当たりの方は、【◯◯】までお越しください。</p></div>
+    <div class="card red"><span class="lbl">6-9 Jアラート<span class="badge now">即放送</span></span><p>緊急放送です。ミサイルが発射されたとの情報がありました。外には出ないでください。窓から離れ、できるだけ建物の内側の場所で、頭を守ってください。</p></div>
+    <div class="card"><span class="lbl">6-10 中止・再開・帰宅案内</span><p>【◯◯のため、本日のイベントは中止します／◯時◯分から再開します】。お帰りの際は、エレベーターではなく、階段と【◯◯の出口】をご利用ください。</p></div>
+    <div class="card"><span class="lbl">6-11 英語</span><p>Earthquake. Stay calm. Move away from windows and lights, and protect your head.<br>Please follow the building announcement. Do not use the elevators. Use the stairs.</p></div>
+  </section>
+  <section class="panel">
+    <h2><span class="no">07</span>イベント別シート</h2>
+    <div class="tbl"><table>
+      <tr><th>項目</th><th>記入</th></tr>
+      <tr><td>イベント名・開催日時</td><td class="blank"></td></tr>
+      <tr><td>施設名・ブースの階</td><td class="blank"></td></tr>
+      <tr><td>防災センター（内線・電話）</td><td class="blank"></td></tr>
+      <tr><td>ブース最寄りの非常口・階段</td><td class="blank"></td></tr>
+      <tr><td>屋外の集合場所</td><td class="blank"></td></tr>
+      <tr><td>津波時の避難方法（上の階か屋外か）</td><td class="blank"></td></tr>
+      <tr><td>AED・救護室・迷子センター</td><td class="blank"></td></tr>
+      <tr><td>館内放送はブースまで聞こえるか</td><td class="blank"></td></tr>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2><span class="no">08–10</span>準備・記録・確認事項</h2>
+    <ul class="check">
+      <li>主催者・施設と「館内放送が最優先、ブースは復唱・補足」のルールを確認</li>
+      <li>施設の避難経路図を入手し、非常口に印をつけてブースに置く</li>
+      <li>防災センターにあいさつし、連絡先を交換</li>
+      <li>館内放送がブースで聞こえるか、放送テストで確認</li>
+      <li>非常口・避難通路を機材や荷物でふさいでいないか確認</li>
+      <li>懐中電灯（停電対策）、電池式ラジオ、ハンドマイクを置く</li>
+      <li>火災報知器が鳴ったときの施設の確認手順を聞いておく</li>
+      <li>放送したら記録し、当日中に主催者・施設・マリンFMへ報告</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============ 関内フェスタ版 ============ -->
+<div class="wrap view" id="v-kannai" hidden>
+  <div class="crumb"><a href="#events">← イベント版の一覧</a><a class="btn" href="https://nao-1980.github.io/marinefm-booth-manual/kannai-festa-20261103-a4.pdf" target="_blank" rel="noopener">A4印刷用PDF（6ページ）</a></div>
+  <section class="panel">
+    <h2><span class="no">01</span>基本情報</h2>
+    <p>屋外版をこのフェスタ用に埋めた当日版です。判断フローと話し方は屋外版を使います。</p>
+    <div class="tbl"><table>
+      <tr><th>項目</th><th>内容</th></tr>
+      <tr><td>イベント名</td><td>第23回 関内フード&amp;ハイカラフェスタ</td></tr>
+      <tr><td>開催日時</td><td>2026年11月3日（火・祝）11:00〜16:00</td></tr>
+      <tr><td>会場</td><td>弁天通り1〜3丁目、桜通りとベイスターズ通りの一部（車両通行規制した路上）</td></tr>
+      <tr><td>主催</td><td>関内まちづくり振興会（実行委員会）</td></tr>
+      <tr><td>本部の位置・責任者</td><td class="blank">（当日朝に確認）</td></tr>
+      <tr><td>会場の様子</td><td>露店、通りにイス・机を多数配置、ステージ、地酒ブース、JAZZ・スリッパ卓球など</td></tr>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2><span class="no">02</span>想定するリスク</h2>
+    <div class="tbl"><table>
+      <tr><th>事態</th><th>特に気をつける点</th></tr>
+      <tr><td>地震・津波</td><td>港に面した低地。揺れたら津波情報を最優先で確認</td></tr>
+      <tr><td>群衆の混乱・転倒</td><td>路上にイス・机が多く通路が狭い。ステージ前の時間帯は特に注意</td></tr>
+      <tr><td>強風・突風</td><td>露店テント・のぼり・ステージ周りの看板</td></tr>
+      <tr><td>雨・足元</td><td>路面が濡れるとすべりやすい</td></tr>
+      <tr><td>急病・けが</td><td>飲酒あり（地酒ブース）。プロレス・ダンス演目のけがも想定</td></tr>
+      <tr><td>迷子</td><td>家族連れの多い祝日。3つの通りにまたがるので待機場所を1か所に</td></tr>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2><span class="no">03</span>ステージ時間割と放送の段取り</h2>
+    <div class="tbl"><table>
+      <tr><th>時刻</th><th>弁天通りステージ</th><th>ブースの心構え</th></tr>
+      <tr><td>11:00</td><td>開始</td><td>本部・救護・迷子待機場所を確認</td></tr>
+      <tr><td>11:30〜</td><td>路上舞踏会</td><td>人の集まり始め</td></tr>
+      <tr><td>12:15〜</td><td>diana（横浜DeNAベイスターズ）</td><td>混雑ピーク。通路確保を意識</td></tr>
+      <tr><td>13:00〜</td><td>関内路上プロレス</td><td>密集しやすい。けが人対応も想定</td></tr>
+      <tr><td>14:15〜</td><td>Elegance（横浜エクセレンス）</td><td>混雑ピーク</td></tr>
+      <tr><td>15:00〜</td><td>B-ROSE（横浜ビー・コルセアーズ）</td><td>終盤の混雑。帰宅案内を準備</td></tr>
+      <tr><td>16:00</td><td>終了</td><td>終了・帰宅案内</td></tr>
+    </table></div>
+    <ol>
+      <li>ブース責任者がステージ音響担当に合図し、ステージの音を止めてもらう</li>
+      <li>ステージのMCに、同じ内容を復唱してもらう（読み上げカードを1部渡しておく）</li>
+      <li>弁天通り・桜通り・ベイスターズ通りの3か所に届いているかスタッフが確認</li>
+    </ol>
+  </section>
+  <section class="panel">
+    <h2><span class="no">04</span>避難情報</h2>
+    <p>関内まちづくり振興会「セントラル関内 帰宅困難者向け 災害時行動ガイド」（Ver.1、2026年3月）のマップから転記しました。</p>
+    <div class="tbl"><table>
+      <tr><th>項目</th><th>内容</th></tr>
+      <tr><td>会場の位置づけ</td><td>会場はマップの「セントラル関内」エリアの中。港に面した低地で、津波・高潮では0.3〜3.0m程度の浸水が想定されている</td></tr>
+      <tr><td>地震の直後</td><td>建物から飛び出さない。屋外では建物からの落下物に注意。むやみに移動しない</td></tr>
+      <tr><td>津波が来るまで</td><td>地震から5分もたたずに来ることもある。強い揺れなら警報を待たずに動く</td></tr>
+      <tr><td><strong>会場に近い津波避難施設</strong></td><td><strong>横浜メディア・ビジネスセンター（弁天通り沿い）、コンフォートホテル横浜関内、関内新井ビル、横浜中央YMCA</strong></td></tr>
+      <tr><td>周辺の津波避難施設</td><td>横浜市本庁舎、中区役所、神奈川県庁（本庁舎・新庁舎）、割烹蒲焼わかな（鈴木ビル）ほか</td></tr>
+      <tr><td>津波時の避難方向</td><td>海（本町通り・象の鼻パーク・大さん橋方向）と大岡川沿いには向かわない。近くの津波避難施設か頑丈な建物の上の階へ</td></tr>
+      <tr><td>津波のあと</td><td>津波は繰り返し来る。警報が解除されるまで戻らない</td></tr>
+      <tr><td>帰宅困難者一時滞在施設</td><td>開港記念会館、関内ホール、関内新井ビル、横浜中央YMCA ほか（開設状況は「一時滞在施設ナビ」）</td></tr>
+      <tr><td>冠水したとき</td><td>マリナード地下街や地下鉄の出入口など、地下に入らない</td></tr>
+      <tr><td>情報源（マップ記載）</td><td>マリンFM 86.1MHz、FM横浜 84.7MHz、災害用伝言ダイヤル171</td></tr>
+      <tr><td>AED・救護所・迷子の待機場所</td><td class="blank">（本部に確認）</td></tr>
+    </table></div>
+    <p class="note">横浜公園は関内駅周辺の「滞留者の一時避難場所」ですが、津波の避難先ではありません。</p>
+  </section>
+  <section class="panel">
+    <h2><span class="no">05</span>読み上げカード</h2>
+    <div class="card red"><span class="lbl">地震（揺れている最中）<span class="badge now">即放送</span></span><p>地震です。落ち着いてください。頭を守って、その場でしゃがんでください。テントやのぼり、看板、建物のガラスから離れてください。揺れがおさまるまで動かないでください。</p></div>
+    <div class="card"><span class="lbl">揺れがおさまった直後</span><p>揺れはおさまりました。建物のそばは、落ちてくる物があり危険です。建物から離れて、むやみに移動せずにお待ちください。関内は海の近くです。この後の津波の情報を、この放送でお伝えします。イスや机につまずかないよう、走らないでください。</p></div>
+    <div class="card red"><span class="lbl">津波警報・大津波警報<span class="badge now">即放送</span></span><p>緊急放送です。【大津波警報／津波警報】が発表されました。海や川の方向へは行かないでください。近くの津波避難施設、横浜メディア・ビジネスセンター、関内新井ビル、横浜中央YMCAなど、頑丈な建物の上の階へ、今すぐ避難してください。荷物は置いて、今すぐ避難してください。（繰り返す）</p></div>
+    <div class="card"><span class="lbl">強風（露店テント）</span><p>お知らせします。風が強くなっています。テントやのぼり、看板のそばから離れてください。出店者の皆さまは、テントの固定をもう一度ご確認ください。</p></div>
+    <div class="card"><span class="lbl">混雑（ステージ前）</span><p>お願いします。ステージ前が大変混み合っています。通路をあけて、前の方を押さないようにお願いします。お子さま連れの方は、お子さまの手を離さないでください。</p></div>
+    <div class="card"><span class="lbl">迷子</span><p>迷子のお知らせです。【◯色の服】を着た、【◯歳くらいの男の子／女の子】が、【迷子の待機場所】でお待ちです。お心当たりの方は、【迷子の待機場所】までお越しください。</p></div>
+    <div class="card"><span class="lbl">落とし物</span><p>落とし物のお知らせです。【◯色の財布／スマートフォン】のお届けがありました。お心当たりの方は、マリンFMのブースまでお越しください。</p></div>
+    <div class="card"><span class="lbl">電車が止まったとき（帰宅困難）</span><p>お知らせします。現在、電車が止まっています。むやみに移動せず、安全な場所でお待ちください。休憩できる施設については、お近くのスタッフにおたずねください。最新の情報は、マリンFM 86.1MHzでもお伝えします。</p></div>
+    <div class="card"><span class="lbl">終了・帰宅案内</span><p>本日の関内フード&amp;ハイカラフェスタは、まもなく終了します。お帰りの際は、足元に気をつけて、ゆっくりお進みください。ご来場ありがとうございました。</p></div>
+  </section>
+  <section class="panel">
+    <h2><span class="no">06</span>当日朝チェック（11:00開始まで）</h2>
+    <ul class="check">
+      <li>災害時行動ガイドをマップ面を開いてブースに置き、横浜メディア・ビジネスセンターまでの道を歩いて確認</li>
+      <li>本部の位置・責任者・連絡先、救護所、迷子の待機場所を確認</li>
+      <li>津波警報などの即時放送をブース判断で行ってよいか、本部の了承を取る</li>
+      <li>ステージ音響担当と「緊急時は音を止める」合図を決め、MCに読み上げカードを渡す</li>
+      <li>ブースの音が3つの通りに届くか確認</li>
+      <li>当日の天気（風・雨）を確認し、責任者に共有</li>
+    </ul>
+  </section>
+  <section class="panel">
+    <h2><span class="no">07</span>迷子対応カード</h2>
+    <p>記入してから放送します。<strong>子どもの名前は記録しても放送しません。</strong>保護者が先に探しに来た場合も同じカードで受け付けます。</p>
+    <ol class="promise">
+      <li>スタッフ2人以上で対応し、子どもと大人が1対1にならないようにする</li>
+      <li>ブース（または本部の迷子待機場所）から子どもを動かさない</li>
+      <li>放送は服装・年齢・待機場所だけ。名前・住所は言わない</li>
+      <li>引き渡しは、子どもの反応か、保護者が特徴を言えるかで確認する</li>
+      <li>30分たっても保護者が来なければ、本部と警備に連絡し、警察への届け出を相談する</li>
+    </ol>
+    <div class="kid"><div class="kid-h">1人目</div><div class="tbl"><table class="kidt"><tr><th>受付の種類</th><td class="hint">保護した／保護者が探している</td><th>受付時刻</th><td class="hint"></td></tr><tr><th>保護した場所・見失った場所</th><td class="hint"></td><th>対応スタッフ（2名）</th><td class="hint"></td></tr><tr><th>子どもの名前（放送しない）</th><td class="hint"></td><th>年齢・性別</th><td class="hint"></td></tr><tr><th>服装（上・下・靴・帽子）</th><td class="hint"></td><th>持ち物・目立つ特徴</th><td class="hint"></td></tr><tr><th>子どもが話したこと</th><td class="hint"></td><th>保護者の名前・連絡先</th><td class="hint"></td></tr><tr><th>放送した時刻（1／2／3回目）</th><td class="hint"></td><th>本部・警備への連絡時刻</th><td class="hint"></td></tr><tr><th>引き取り時刻</th><td class="hint"></td><th>引き取った人の名前・続柄</th><td class="hint"></td></tr><tr><th>本人確認の方法</th><td class="hint">子どもの反応／特徴の一致</td><th>引き渡したスタッフ</th><td class="hint"></td></tr><tr><th>メモ</th><td colspan="3" class="blank"></td></tr></table></div></div>
+<div class="kid"><div class="kid-h">2人目</div><div class="tbl"><table class="kidt"><tr><th>受付の種類</th><td class="hint">保護した／保護者が探している</td><th>受付時刻</th><td class="hint"></td></tr><tr><th>保護した場所・見失った場所</th><td class="hint"></td><th>対応スタッフ（2名）</th><td class="hint"></td></tr><tr><th>子どもの名前（放送しない）</th><td class="hint"></td><th>年齢・性別</th><td class="hint"></td></tr><tr><th>服装（上・下・靴・帽子）</th><td class="hint"></td><th>持ち物・目立つ特徴</th><td class="hint"></td></tr><tr><th>子どもが話したこと</th><td class="hint"></td><th>保護者の名前・連絡先</th><td class="hint"></td></tr><tr><th>放送した時刻（1／2／3回目）</th><td class="hint"></td><th>本部・警備への連絡時刻</th><td class="hint"></td></tr><tr><th>引き取り時刻</th><td class="hint"></td><th>引き取った人の名前・続柄</th><td class="hint"></td></tr><tr><th>本人確認の方法</th><td class="hint">子どもの反応／特徴の一致</td><th>引き渡したスタッフ</th><td class="hint"></td></tr><tr><th>メモ</th><td colspan="3" class="blank"></td></tr></table></div></div>
+<div class="kid"><div class="kid-h">3人目</div><div class="tbl"><table class="kidt"><tr><th>受付の種類</th><td class="hint">保護した／保護者が探している</td><th>受付時刻</th><td class="hint"></td></tr><tr><th>保護した場所・見失った場所</th><td class="hint"></td><th>対応スタッフ（2名）</th><td class="hint"></td></tr><tr><th>子どもの名前（放送しない）</th><td class="hint"></td><th>年齢・性別</th><td class="hint"></td></tr><tr><th>服装（上・下・靴・帽子）</th><td class="hint"></td><th>持ち物・目立つ特徴</th><td class="hint"></td></tr><tr><th>子どもが話したこと</th><td class="hint"></td><th>保護者の名前・連絡先</th><td class="hint"></td></tr><tr><th>放送した時刻（1／2／3回目）</th><td class="hint"></td><th>本部・警備への連絡時刻</th><td class="hint"></td></tr><tr><th>引き取り時刻</th><td class="hint"></td><th>引き取った人の名前・続柄</th><td class="hint"></td></tr><tr><th>本人確認の方法</th><td class="hint">子どもの反応／特徴の一致</td><th>引き渡したスタッフ</th><td class="hint"></td></tr><tr><th>メモ</th><td colspan="3" class="blank"></td></tr></table></div></div>
+
+    <p class="note">個人情報が入るため、終了後は本部（主催者）に渡し、ブースに残しません。</p>
+  </section>
+  <section class="panel">
+    <h2><span class="no">08</span>落とし物</h2>
+    <ul>
+      <li>財布・スマホ・カギなどの貴重品は<strong>2人で立ち会って</strong>受け取る。中身は確認しない</li>
+      <li>放送では特徴を一部だけ伝え、残りの特徴を言ってもらって本人確認する</li>
+      <li>終了時に持ち主が来なかった物は本部に引き継ぐ。現金・貴重品は本部の判断で警察へ</li>
+    </ul>
+    <div class="tbl"><table>
+      <tr><th>受付時刻</th><th>品名・特徴</th><th>拾った場所</th><th>届けてくれた人</th><th>返却時刻</th><th>受け取った人・確認内容</th></tr>
+      <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table></div>
+  </section>
+</div>
+
+<!-- ============ イベント版の一覧 ============ -->
+<div class="wrap view" id="v-events" hidden>
+  <section class="panel">
+    <h2>イベント版</h2>
+    <p>出店するイベントごとの当日版です。スタッフが「イベントを追加」から入力すると、読み上げカードや迷子カードまでそろった当日版が自動でできあがり、全員の一覧に並びます。</p>
+    <div class="ev-toolbar"><button type="button" class="btn" id="ev-add" hidden>＋ イベントを追加</button><span class="note" id="ev-status">読み込み中…</span></div>
+    <div class="ev-list" id="ev-list">
+      <a class="ev" href="#kannai">
+        <span class="d">2026.11.03（火・祝）／屋外</span>
+        <span class="t">第23回 関内フード&amp;ハイカラフェスタ</span>
+        <span class="m">弁天通り1〜3丁目ほか。津波避難施設・読み上げカード・迷子カード・落とし物記録つき。A4印刷用PDF（6ページ）あり</span>
+      </a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ 追加・編集フォーム ============ -->
+<div class="wrap view" id="v-new-event" hidden>
+  <div class="crumb"><a href="#events">← イベント版の一覧</a></div>
+  <form class="panel evform" id="ev-form" novalidate>
+    <h2 id="ev-form-title">イベントを追加</h2>
+    <p class="note">わかるところだけで大丈夫です。空欄は当日版で「当日朝に確認」と表示されます。<span class="req">必須</span>の項目だけ入れれば保存できます。</p>
+
+
+    <h3>基本情報</h3>
+    <div class="grid2">
+      <label class="fld wide"><span>イベント名 <em class="req">必須</em></span><input id="f-name" name="name" type="text" placeholder="例：ホッチポッチ横浜"></label>
+      <label class="fld"><span>開催日 <em class="req">必須</em></span><input id="f-date" name="date" type="date"></label>
+      <label class="fld"><span>時間</span><input id="f-time" name="time" type="text" placeholder="例：10:00〜16:00"></label>
+      <label class="fld wide"><span>会場・ブースの位置 <em class="req">必須</em></span><input id="f-place" name="place" type="text" placeholder="例：象の鼻パーク　ブースは入口横"></label>
+      <fieldset class="fld"><legend>屋外／屋内</legend>
+        <label class="opt"><input type="radio" name="setting" id="f-out" value="outdoor" checked> 屋外</label>
+        <label class="opt"><input type="radio" name="setting" id="f-in" value="indoor"> 屋内</label>
+      </fieldset>
+      <label class="fld"><span>主催</span><input id="f-org" name="org" type="text"></label>
+      <label class="fld wide"><span>本部の位置・責任者</span><input id="f-hq" name="hq" type="text"></label>
+    </div>
+
+    <h3>会場の特徴（当てはまるものすべて）</h3>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="f-sea" name="sea"> 海の近く</label>
+      <label class="opt"><input type="checkbox" id="f-river" name="river"> 川沿い・低地</label>
+      <label class="opt"><input type="checkbox" id="f-crowd" name="crowd"> 人通りが多い・通路が狭い</label>
+      <label class="opt"><input type="checkbox" id="f-stage" name="stage"> ステージがある</label>
+      <label class="opt"><input type="checkbox" id="f-alcohol" name="alcohol"> 飲酒がある</label>
+      <label class="opt"><input type="checkbox" id="f-kids" name="kids"> 家族連れが多い</label>
+    </div>
+
+    <h3>避難情報</h3>
+    <div class="grid2">
+      <label class="fld wide"><span>近くの津波避難施設・避難場所</span><textarea id="f-shelters" name="shelters" rows="2" placeholder="例：横浜メディア・ビジネスセンター、関内新井ビル"></textarea></label>
+      <label class="fld wide"><span>避難の方向（行ってはいけない方向も）</span><textarea id="f-direction" name="direction" rows="2" placeholder="例：海と大岡川の方向には行かない"></textarea></label>
+      <label class="fld wide"><span>参考にした防災マップ</span><input id="f-map" name="map" type="text" placeholder="例：関内まちづくり振興会「災害時行動ガイド」"></label>
+      <label class="fld"><span>救護所</span><input id="f-aid" name="aid" type="text"></label>
+      <label class="fld"><span>迷子の待機場所</span><input id="f-lost" name="lost" type="text"></label>
+      <label class="fld"><span>AEDの位置</span><input id="f-aed" name="aed" type="text"></label>
+      <label class="fld"><span>雷・突風で逃げ込める建物</span><input id="f-shelterIn" name="shelterIn" type="text"></label>
+    </div>
+
+    <h3>ステージ・時間割</h3>
+    <label class="fld wide"><span>1行に1つずつ（時刻と内容）</span><textarea id="f-schedule" name="schedule" rows="4" placeholder="11:30 オープニング&#10;13:00 ライブ"></textarea></label>
+
+    <h3>メモ</h3>
+    <label class="fld wide"><span>スタッフへの連絡など</span><textarea id="f-memo" name="memo" rows="2"></textarea></label>
+
+    <h3>保存</h3>
+    <div class="grid2">
+      <label class="fld"><span>スタッフ用パスコード <em class="req">必須</em></span><input id="f-pass" name="passcode" type="password" autocomplete="current-password"></label>
+    </div>
+    <p class="note">パスコードはこの端末に記憶されます。わからないときは責任者に確認してください。</p>
+
+    <div class="formbar"><button type="submit" class="btn" id="ev-save">保存して当日版を作る</button><a href="#events" class="btn ghost">キャンセル</a><span class="note err" id="ev-form-msg" role="status"></span></div>
+  </form>
+</div>
+
+<!-- ============ 追加したイベントの当日版 ============ -->
+<div class="wrap view" id="v-event" hidden>
+  <div class="crumb"><a href="#events">← イベント版の一覧</a><span id="ev-tools"></span></div>
+  <div id="ev-body" class="evbody"></div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>マリンFM 86.1MHz 案内放送ブース　有事アナウンス対応マニュアル</span>
+    <span>資料作成：<strong>NAYA WORKS</strong></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fixed=['outdoor','indoor','events','kannai','new-event'];
+  var navOf={outdoor:'outdoor',indoor:'indoor',events:'events',kannai:'events','new-event':'events',event:'events'};
+  var STATIC_EVENTS=[{"aed": "", "aid": "", "alcohol": false, "crowd": false, "date": "2026-11-15", "direction": "海の方向には行かない。避難先は象の鼻パークの津波避難情報板で確認", "hq": "", "kids": true, "lost": "", "map": "横浜市 津波避難情報板（象の鼻パークに設置）", "memo": "時間・本部・救護所・迷子の待機場所は、わかりしだい「編集」から追加してください。", "name": "ホッチポッチ横浜", "org": "", "place": "象の鼻パーク（案内放送ブース）", "river": false, "schedule": "", "sea": true, "setting": "outdoor", "shelterIn": "", "shelters": "", "stage": false, "time": "", "updatedAt": "2026-11-03T01:45:00+09:00", "id": "e-hotchpotch-20261115"}];
+  var API=(window.EVENTS_API||'').trim();
+  var PASS_KEY='booth-manual-passcode';
+  // Apps Script のウェブアプリとして開いたときは google.script.run で直接呼ぶ
+  var GAS=!!(window.google&&google.script&&google.script.run);
+  var events=[], canWrite=GAS||!!API, editing=null, loaded=false;
+  function gasCall(fn,arg){return new Promise(function(ok,ng){google.script.run.withSuccessHandler(ok).withFailureHandler(ng)[fn](arg);});}
+  async function getList(){
+    if(GAS) return gasCall('apiList');
+    var r=await fetch(API+(API.indexOf('?')<0?'?':'&')+'api=1',{cache:'no-store'}); return r.json();
+  }
+  function getPass(){try{return localStorage.getItem(PASS_KEY)||'';}catch(_){return '';}}
+  function setPass(v){try{if(v)localStorage.setItem(PASS_KEY,v);else localStorage.removeItem(PASS_KEY);}catch(_){}}
+  // GASへの書き込み。text/plain にしてCORSの事前確認を避ける
+  async function post(body){
+    if(GAS){var g=await gasCall('apiPost',body); if(!g.ok){var ge=new Error(g.error);ge.code=g.error;throw ge;} return g;}
+    var r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+    var j=await r.json(); if(!j.ok){var e=new Error(j.error);e.code=j.error;throw e;} return j;
+  }
+  function errText(err){
+    var c=err&&err.code;
+    if(c==='passcode') return 'パスコードが違います。';
+    if(c==='required') return 'イベント名・開催日・会場を入れてください。';
+    if(c==='quota') return '保存できる件数の上限です。古いイベントを削除してから追加してください。';
+    if(c==='busy') return '混み合っています。少し待ってからもう一度押してください。';
+    return '保存できませんでした。通信状況を確認して、もう一度押してください。';
+  }
+  function $(id){return document.getElementById(id);}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function val(s,dflt){s=(s||'').trim();return s?esc(s):'<span class="tbd">'+(dflt||'当日朝に確認')+'</span>';}
+  function fmtDate(d){if(!d)return'';var p=d.split('-');if(p.length<3)return d;var w=['日','月','火','水','木','金','土'][new Date(Number(p[0]),Number(p[1])-1,Number(p[2])).getDay()];return p[0]+'.'+p[1]+'.'+p[2]+'（'+w+'）';}
+  function current(){
+    var h=(location.hash||'').slice(1);
+    if(h.indexOf('e-')===0) return {view:'event',id:h.slice(2)};
+    if(fixed.indexOf(h)<0) h='outdoor';
+    return {view:h};
+  }
+  function show(){
+    var c=current();
+    ['outdoor','indoor','events','kannai','new-event','event'].forEach(function(n){$('v-'+n).hidden=(n!==c.view);});
+    document.querySelectorAll('nav.tabs a[data-view]').forEach(function(a){
+      if(a.getAttribute('data-view')===navOf[c.view]) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    });
+    if(c.view==='event') renderEvent(c.id);
+    if(c.view==='new-event') prepForm();
+    if(c.view==='events') refresh();
+  }
+  window.addEventListener('hashchange',function(){show();window.scrollTo(0,0);});
+
+  /* ---------- 一覧 ---------- */
+  function renderList(){
+    var list=$('ev-list');
+    list.querySelectorAll('.ev.dyn').forEach(function(n){n.remove();});
+    var kannai=list.querySelector('a[href="#kannai"]');
+    var sorted=events.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+    sorted.forEach(function(e){
+      var a=document.createElement('a'); a.className='ev dyn'; a.href='#e-'+e.id;
+      a.innerHTML='<span class="d">'+esc(fmtDate(e.date))+'／'+(e.setting==='indoor'?'屋内':'屋外')+'</span><span class="t">'+esc(e.name)+'</span><span class="m">'+esc(e.place)+'</span>';
+      if((e.date||'')>='2026-11-03') list.insertBefore(a,kannai); else list.appendChild(a);
+    });
+  }
+
+  /* ---------- フォーム ---------- */
+  var F=['name','date','time','place','org','hq','shelters','direction','map','aid','lost','aed','shelterIn','schedule','memo'];
+  var C=['sea','river','crowd','stage','alcohol','kids'];
+  function prepForm(){
+    if(!canWrite){ $('ev-form-msg').textContent='保存先のスプレッドシートが設定されていないため、保存できません。'; }
+    var e=editing?events.filter(function(x){return x.id===editing;})[0]:null;
+    $('ev-form-title').textContent=e?'イベントを編集':'イベントを追加';
+    $('ev-save').textContent=e?'保存する':'保存して当日版を作る';
+    F.forEach(function(k){$('f-'+k).value=e?(e[k]||''):'';});
+    C.forEach(function(k){$('f-'+k).checked=e?!!e[k]:false;});
+    (e&&e.setting==='indoor'?$('f-in'):$('f-out')).checked=true;
+    $('f-pass').value=getPass();
+    if(canWrite) $('ev-form-msg').textContent='';
+    document.querySelectorAll('.filled').forEach(function(x){x.classList.remove('filled');});
+  }
+  $('ev-form').addEventListener('submit',async function(ev){
+    ev.preventDefault();
+    var msg=$('ev-form-msg');
+    if(!canWrite){prepForm();return;}
+    var d={};
+    F.forEach(function(k){d[k]=$('f-'+k).value.trim();});
+    C.forEach(function(k){d[k]=$('f-'+k).checked;});
+    d.setting=$('f-in').checked?'indoor':'outdoor';
+    if(!d.name||!d.date||!d.place){msg.textContent='イベント名・開催日・会場を入れてください。';return;}
+    var pass=$('f-pass').value.trim();
+    if(!pass){msg.textContent='スタッフ用パスコードを入れてください。';$('f-pass').focus();return;}
+    d.id=editing||('e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
+    $('ev-save').disabled=true; msg.textContent='保存しています…';
+    try{
+      await post({action:'save',passcode:pass,event:d});
+      setPass(pass);
+      d.updatedAt=new Date().toISOString();
+      events=events.filter(function(x){return x.id!==d.id;}).concat([d]);
+      renderList(); editing=null; msg.textContent='';
+      location.hash='e-'+d.id;
+    }catch(err){
+      if(err&&err.code==='passcode') setPass('');
+      msg.textContent=errText(err);
+    }finally{$('ev-save').disabled=false;}
+  });
+  $('ev-add').addEventListener('click',function(){editing=null;location.hash='new-event';prepForm();});
+
+  /* ---------- 当日版の生成 ---------- */
+  function cardsFor(e){
+    var indoor=e.setting==='indoor', tsunami=e.sea||e.river;
+    var sh=(e.shelters||'').trim(), dir=(e.direction||'').trim(), lost=(e.lost||'').trim()||'【迷子の待機場所】';
+    var c=[];
+    if(tsunami) c.push(['津波警報・大津波警報',1,['緊急放送です。【大津波警報／津波警報】が発表されました。', e.sea&&e.river?'海や川の方向へは行かないでください。':(e.sea?'海の方向へは行かないでください。':'川の方向へは行かないでください。')].concat(sh?['近くの避難施設、'+sh+'など、']:[]).concat([indoor?'館内放送の案内に従い、階段で上の階へ避難してください。':'頑丈な建物の上の階へ、今すぐ避難してください。','荷物は置いて、今すぐ避難してください。（繰り返す）'])]);
+    c.push(['地震（揺れている最中）',1, indoor?['地震です。落ち着いてください。','照明や窓ガラス、棚から離れて、頭を守ってください。','揺れがおさまるまで、その場から動かないでください。','あわてて外に出ないでください。']:['地震です。落ち着いてください。','頭を守って、その場でしゃがんでください。','テントやのぼり、看板、建物のガラスから離れてください。','揺れがおさまるまで動かないでください。']]);
+    c.push(['揺れがおさまった直後',0, (indoor?['揺れはおさまりました。','館内放送と、お近くのスタッフの指示に従ってください。','エレベーターは使わないでください。']:['揺れはおさまりました。建物のそばは、落ちてくる物があり危険です。','建物から離れて、むやみに移動せずにお待ちください。']).concat(tsunami?['ここは'+(e.sea?'海':'川')+'の近くです。この後の津波の情報を、この放送でお伝えします。']:['今後の情報は、この放送でお伝えします。']).concat(e.crowd||e.stage?['走らず、前の方を押さないでください。']:[])]);
+    if(!indoor){
+      c.push(['雷・突風（イベント中断）',0,['お知らせします。【雷／強い風】が近づいているため、イベントを一時中断します。','テントや木、ポールのそばから離れ、'+(e.shelterIn?e.shelterIn:'【屋内の待機場所】')+'へ移動してください。','再開する場合は、この放送でお知らせします。']]);
+      c.push(['強風（テント・のぼり）',0,['お知らせします。風が強くなっています。','テントやのぼり、看板のそばから離れてください。','出店者の皆さまは、テントの固定をもう一度ご確認ください。']]);
+    } else {
+      c.push(['停電',0,['停電しています。落ち着いてください。','非常灯がつくまで、その場から動かないでください。','足元に気をつけて、スタッフの案内をお待ちください。']]);
+      c.push(['火災（館内放送のあと）',0,['ただいまの館内放送のとおり、【◯階◯◯付近】で火災が発生しました。','口と鼻をおおい、姿勢を低くして、【◯◯の非常口／階段】から避難してください。','エレベーターは使わないでください。']]);
+    }
+    if(e.crowd||e.stage) c.push(['混雑（ステージ前）',0,['お願いします。'+(e.stage?'ステージ前':'通路')+'が大変混み合っています。','通路をあけて、前の方を押さないようにお願いします。','お子さま連れの方は、お子さまの手を離さないでください。']]);
+    c.push(['急病人・けが人',0,['お知らせします。【◯◯付近】で、手当てが必要な方がいらっしゃいます。','医師・看護師の方がいらっしゃいましたら、お近くのスタッフにお声がけください。'].concat(e.aid?['救護所は、'+e.aid+'にあります。']:[])]);
+    c.push(['迷子（名前は放送しない）',0,['迷子のお知らせです。','【◯色の服】を着た、【◯歳くらいの男の子／女の子】が、',lost+'でお待ちです。','お心当たりの方は、'+lost+'までお越しください。']]);
+    c.push(['落とし物',0,['落とし物のお知らせです。','【◯色の財布／スマートフォン】のお届けがありました。','お心当たりの方は、マリンFMのブースまでお越しください。']]);
+    c.push(['電車が止まったとき',0,['お知らせします。現在、電車が止まっています。','むやみに移動せず、安全な場所でお待ちください。','最新の情報は、マリンFM 86.1MHzでもお伝えします。']]);
+    c.push(['終了・帰宅案内',0,['本日の'+e.name+'は、まもなく終了します。','お帰りの際は、足元に気をつけて、ゆっくりお進みください。','ご来場ありがとうございました。']]);
+    c.push(['英語（地震・津波）',0, indoor?['Earthquake. Stay calm. Move away from windows and lights, and protect your head.','Please follow the building announcement. Do not use the elevators.']:['Earthquake. Please stay calm, crouch down, and protect your head.'].concat(tsunami?['Tsunami warning. Move away from the sea now. Evacuate to the upper floors of a strong building.']:[])]);
+    return c;
+  }
+  function risksFor(e){
+    var r=[];
+    if(e.sea||e.river) r.push(['地震・津波',(e.sea?'海':'川')+'の近く。揺れたら津波情報を最優先で確認し、警報なら即放送']);
+    else r.push(['地震','身を守る呼びかけを即放送。そのあとは本部の指示を待つ']);
+    if(e.setting!=='indoor') r.push(['天候（雷・強風・雨）','テント・のぼり・看板。屋根のある待機場所を確認しておく']);
+    else r.push(['火災・停電','館内放送と防災センターが最優先。ブースは復唱と補足']);
+    if(e.crowd||e.stage) r.push(['群衆の混乱・転倒',(e.stage?'ステージ前に人が集まる時間帯は特に注意。':'')+'「走らないでください」を繰り返す']);
+    if(e.alcohol) r.push(['急病・けが','飲酒あり。気分が悪い人・転倒に注意']);
+    if(e.kids) r.push(['迷子','家族連れが多い。待機場所を1か所に決めてスタッフ全員で共有']);
+    return r;
+  }
+  function kidBlock(n){
+    var rows=[['受付の種類','保護した／保護者が探している','受付時刻',''],['保護した場所・見失った場所','','対応スタッフ（2名）',''],['子どもの名前（放送しない）','','年齢・性別',''],['服装（上・下・靴・帽子）','','持ち物・目立つ特徴',''],['子どもが話したこと','','保護者の名前・連絡先',''],['放送した時刻（1／2／3回目）','','本部・警備への連絡時刻',''],['引き取り時刻','','引き取った人の名前・続柄',''],['本人確認の方法','子どもの反応／特徴の一致','引き渡したスタッフ','']];
+    return '<div class="kid"><div class="kid-h">'+n+'</div><div class="tbl"><table class="kidt">'+rows.map(function(r){return '<tr><th>'+r[0]+'</th><td class="hint">'+r[1]+'</td><th>'+r[2]+'</th><td class="hint">'+r[3]+'</td></tr>';}).join('')+'<tr><th>メモ</th><td colspan="3" class="blank"></td></tr></table></div></div>';
+  }
+  function eventHTML(e){
+    var indoor=e.setting==='indoor';
+    var sched=(e.schedule||'').split(/\n+/).map(function(s){return s.trim();}).filter(Boolean).map(function(s){var m=s.match(/^(\S+)\s+(.*)$/);return m?[m[1],m[2]]:['',s];});
+    var h='';
+    h+='<section class="panel"><h2><span class="no">01</span>基本情報</h2><p>'+(indoor?'屋内版':'屋外版')+'をこのイベント用に埋めた当日版です。判断フローと話し方は<a href="#'+(indoor?'indoor':'outdoor')+'">'+(indoor?'屋内版':'屋外版')+'</a>を使います。</p><div class="tbl"><table><tr><th>項目</th><th>内容</th></tr>'+
+      '<tr><td>イベント名</td><td>'+esc(e.name)+'</td></tr><tr><td>開催日時</td><td>'+esc(fmtDate(e.date))+' '+esc(e.time||'')+'</td></tr><tr><td>会場・ブースの位置</td><td>'+esc(e.place)+'</td></tr><tr><td>屋外／屋内</td><td>'+(indoor?'屋内':'屋外')+'</td></tr><tr><td>主催</td><td>'+val(e.org,'未記入')+'</td></tr><tr><td>本部の位置・責任者</td><td>'+val(e.hq)+'</td></tr></table></div>'+(e.memo?'<p class="note">メモ：'+esc(e.memo)+'</p>':'')+'</section>';
+    h+='<section class="panel"><h2><span class="no">02</span>想定するリスク</h2><div class="tbl"><table><tr><th>事態</th><th>気をつける点</th></tr>'+risksFor(e).map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('')+'</table></div></section>';
+    if(sched.length) h+='<section class="panel"><h2><span class="no">03</span>時間割</h2><div class="tbl"><table><tr><th>時刻</th><th>内容</th></tr>'+sched.map(function(s){return '<tr><td>'+esc(s[0])+'</td><td>'+esc(s[1])+'</td></tr>';}).join('')+'</table></div><p class="note">緊急放送のときに、ステージや会場の音を止めてもらう相手と合図を決めておきます。</p></section>';
+    h+='<section class="panel"><h2><span class="no">04</span>避難情報</h2><div class="tbl"><table><tr><th>項目</th><th>内容</th></tr>'+
+      '<tr><td>近くの避難施設・避難場所</td><td>'+val(e.shelters,'防災マップ・本部で確認')+'</td></tr><tr><td>避難の方向</td><td>'+val(e.direction,'防災マップ・本部で確認')+'</td></tr><tr><td>救護所</td><td>'+val(e.aid)+'</td></tr><tr><td>迷子の待機場所</td><td>'+val(e.lost)+'</td></tr><tr><td>AEDの位置</td><td>'+val(e.aed)+'</td></tr>'+(indoor?'':'<tr><td>雷・突風で逃げ込める建物</td><td>'+val(e.shelterIn)+'</td></tr>')+'</table></div>'+(e.map?'<p class="note">出典：'+esc(e.map)+'</p>':'')+'<p class="note">横浜市の津波避難の目安は、海抜5m以上の高い場所か、頑丈な建物の3階以上です。</p></section>';
+    h+='<section class="panel"><h2><span class="no">05</span>読み上げカード</h2><p class="note">【 】は当日差し替え。赤＝ブース判断で即放送。</p>'+cardsFor(e).map(function(c){return '<div class="card'+(c[1]?' red':'')+'"><span class="lbl">'+esc(c[0])+(c[1]?'<span class="badge now">即放送</span>':'')+'</span><p>'+c[2].map(esc).join('<br>')+'</p></div>';}).join('')+'</section>';
+    h+='<section class="panel"><h2><span class="no">06</span>当日朝チェック</h2><ul class="check">'+[
+      '本部の位置・責任者・連絡先、救護所、迷子の待機場所を確認',
+      '津波警報などの即時放送をブース判断で行ってよいか、本部の了承を取る',
+      indoor?'防災センターにあいさつし、館内放送がブースで聞こえるか確認':'ブースの音が会場の端まで届くか確認',
+      (e.shelters?'最寄りの避難施設までの道を実際に歩いて確認':'避難先と避難方向を本部・防災マップで確認'),
+      (e.stage?'ステージ音響担当と「緊急時は音を止める」合図を決める':'会場の音響担当がいれば、緊急時に音を止めてもらう合図を決める'),
+      '全スタッフのスマホで緊急速報ON、天気（風・雨）を確認',
+      '電池式ラジオ・ハンドマイク・予備電池・懐中電灯を確認',
+      '読み上げカードをマイクのすぐ横に置く'].map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul></section>';
+    h+='<section class="panel"><h2><span class="no">07</span>迷子対応カード</h2><p>記入してから放送します。<strong>子どもの名前は記録しても放送しません。</strong>スタッフ2人以上で対応し、30分で保護者が来なければ本部・警備に連絡します。</p>'+kidBlock('1人目')+kidBlock('2人目')+kidBlock('3人目')+'<p class="note">個人情報が入るため、終了後は本部（主催者）に渡し、ブースに残しません。</p></section>';
+    h+='<section class="panel"><h2><span class="no">08</span>落とし物</h2><ul><li>貴重品は<strong>2人で立ち会って</strong>受け取る。中身は確認しない</li><li>放送では特徴を一部だけ伝え、残りの特徴を言ってもらって本人確認する</li><li>持ち主が来なかった物は終了時に本部へ</li></ul><div class="tbl"><table class="lost"><tr><th>受付時刻</th><th>品名・特徴</th><th>拾った場所</th><th>届けてくれた人</th><th>返却時刻</th><th>受け取った人（名前・確認内容）</th></tr>'+Array(10).join('<tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td></tr>')+'</table></div><p class="note">記入例：受付 11:40 ／ 黒い長財布（ブランド名は放送しない）／ ◯◯の机の上 ／ 来場者の女性 ／ 返却 13:05 ／ 本人・色と中身が一致</p></section>';
+    return h;
+  }
+  function renderEvent(id){
+    var body=$('ev-body'), tools=$('ev-tools');
+    var e=events.filter(function(x){return x.id===id;})[0];
+    if(!e){ tools.innerHTML=''; body.innerHTML='<section class="panel"><p>'+(loaded?'このイベントは見つかりませんでした。削除されたか、URLが違う可能性があります。':'読み込み中です…')+'</p></section>'; return; }
+    body.innerHTML='<div class="evhead"><span class="d">'+esc(fmtDate(e.date))+'／'+(e.setting==='indoor'?'屋内':'屋外')+'</span><h2 class="evtitle">'+esc(e.name)+'</h2></div>'+eventHTML(e);
+    tools.innerHTML='<button type="button" class="btn" id="ev-print">印刷する</button>'+(canWrite?'<button type="button" class="btn ghost" id="ev-edit">編集</button><button type="button" class="btn ghost danger" id="ev-del">削除</button>':'')+'<span class="note" id="ev-tmsg"></span>';
+    if($('ev-edit')) $('ev-edit').onclick=function(){editing=id;location.hash='new-event';prepForm();};
+    if($('ev-del')) $('ev-del').onclick=function(){
+      var m=$('ev-tmsg'); m.innerHTML='本当に削除しますか？ <button type="button" class="btn danger" id="ev-del-ok">削除する</button> <button type="button" class="btn ghost" id="ev-del-no">やめる</button>';
+      $('ev-del-no').onclick=function(){m.textContent='';};
+      if(!getPass()) m.innerHTML+=' <input type="password" id="ev-del-pass" class="passin" placeholder="スタッフ用パスコード" autocomplete="current-password">';
+      $('ev-del-ok').onclick=async function(){
+        var pass=getPass()||($('ev-del-pass')?$('ev-del-pass').value.trim():'');
+        if(!pass){$('ev-del-pass').focus();return;}
+        this.disabled=true;
+        try{ await post({action:'delete',passcode:pass,id:id}); setPass(pass); events=events.filter(function(x){return x.id!==id;}); renderList(); location.hash='events'; }
+        catch(err){ if(err&&err.code==='passcode') setPass(''); m.textContent=err&&err.code==='passcode'?'パスコードが違います。もう一度「削除」から操作してください。':'削除できませんでした。もう一度お試しください。'; }
+      };
+    };
+    if($('ev-print')) $('ev-print').onclick=async function(){
+      var m=$('ev-tmsg');
+      var css=document.querySelector('style').textContent;
+      var doc='<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>'+esc(e.name)+' 当日版</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"><style>'+css+
+        '[hidden]{display:none!important}@page{size:A4;margin:14mm}html,body{background:#fff}body{margin:0;font-size:12.5px;line-height:1.7}main .wrap{max-width:none;padding:0;display:grid;gap:12px}.card,tr,.kid{break-inside:avoid}h2{break-after:avoid}.tbl{overflow:visible}table{min-width:0}.ph-head{border-bottom:3px solid #0091db;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}.ph-head b{font-family:var(--display);color:#0b6fbd;font-size:22px}.ph-foot{margin-top:16px;font-size:11px;color:#5d6a76;display:flex;justify-content:space-between}</style></head><body><main><div class="wrap">'+
+        '<div class="ph-head"><div><div class="freq"><b style="font-size:13px;background:#0b6fbd;color:#fff;border-radius:4px;padding:1px 8px">86.1MHz</b> マリンFM 案内放送ブース</div><b>有事アナウンス対応マニュアル　'+esc(e.name)+'</b></div><span>資料作成：NAYA WORKS</span></div>'+
+        body.innerHTML.replace(/<a href="#(indoor|outdoor)">/g,'<span>').replace(/<\/a>/g,'</span>')+'<div class="ph-foot"><span>マリンFM 86.1MHz 案内放送ブース</span><span>資料作成：NAYA WORKS</span></div></div></main></body></html>';
+      // 印刷用ページを新しいタブで開き、読み込み後に印刷画面を出す
+      var w=window.open(URL.createObjectURL(new Blob([doc.replace('</body>','<script>addEventListener("load",function(){setTimeout(print,400)})<\/script></body>')],{type:'text/html'})),'_blank');
+      m.textContent=w?'':'ポップアップがブロックされました。ブラウザの設定で許可してください。';
+    };
+  }
+
+
+  /* ---------- 保存の仕組み（Googleスプレッドシート） ---------- */
+  var fetching=null, lastFetch=0;
+  function refresh(force){
+    if(!canWrite||fetching||(!force&&Date.now()-lastFetch<15000)) return fetching;
+    var st=$('ev-status');
+    fetching=getList().then(function(j){
+      if(!j.ok) throw new Error('bad');
+      events=j.events||[]; st.textContent='';
+    }).catch(function(){
+      if(!events.length) events=STATIC_EVENTS.slice();
+      st.textContent='イベント一覧を読み込めませんでした。通信状況を確認して、ページを開き直してください。';
+    }).then(function(){
+      lastFetch=Date.now(); loaded=true; fetching=null;
+      renderList(); var c=current(); if(c.view==='event') renderEvent(c.id);
+    });
+    return fetching;
+  }
+  $('ev-add').hidden=!canWrite;
+  if(!canWrite){ events=STATIC_EVENTS.slice(); loaded=true; $('ev-status').textContent=''; renderList(); }
+  show();
+  refresh(true);
+})();
+</script>
+
+</body>
+</html>

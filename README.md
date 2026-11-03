@@ -19,6 +19,17 @@
    - 次のユーザーとして実行：自分　／　アクセスできるユーザー：全員
 6. 発行された `https://script.google.com/macros/s/…/exec` のURLを `config.js` の `EVENTS_API` に入れて push
 
+### Apps Script でサイトごと公開する
+
+同じウェブアプリのURLを開くと、マニュアル全体が表示される（GitHub Pages版と同じ内容・同じデータ）。
+
+1. `python3 gas/build.py` で `gas/Index.html` を作る（`index.html` を直したら毎回実行）
+2. Apps Script のエディタで「ファイル ＋ → HTML」から `Index` という名前のファイルを作り、`gas/Index.html` の中身を貼り付け
+3. `Code.gs` も最新の `gas/Code.gs` に貼り替えて保存
+4. 「デプロイ → デプロイを管理 → 編集（鉛筆）→ バージョン：新バージョン → デプロイ」（URLは変わらない）
+
+PDFは GitHub Pages に置いたものを参照している。
+
 ### 運用メモ
 
 - 閲覧はだれでも可。追加・編集・削除はパスコードが必要（入力した端末に記憶される）

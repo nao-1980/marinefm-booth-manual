@@ -662,11 +662,19 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
   var STATIC_EVENTS=[{"aed": "", "aid": "", "alcohol": false, "crowd": false, "date": "2026-11-15", "direction": "海の方向には行かない。避難先は象の鼻パークの津波避難情報板で確認", "hq": "", "kids": true, "lost": "", "map": "横浜市 津波避難情報板（象の鼻パークに設置）", "memo": "時間・本部・救護所・迷子の待機場所は、わかりしだい「編集」から追加してください。", "name": "ホッチポッチ横浜", "org": "", "place": "象の鼻パーク（案内放送ブース）", "river": false, "schedule": "", "sea": true, "setting": "outdoor", "shelterIn": "", "shelters": "", "stage": false, "time": "", "updatedAt": "2026-11-03T01:45:00+09:00", "id": "e-hotchpotch-20261115"}];
   var API=(window.EVENTS_API||'').trim();
   var PASS_KEY='booth-manual-passcode';
-  var events=[], canWrite=!!API, editing=null, loaded=false;
+  // Apps Script のウェブアプリとして開いたときは google.script.run で直接呼ぶ
+  var GAS=!!(window.google&&google.script&&google.script.run);
+  var events=[], canWrite=GAS||!!API, editing=null, loaded=false;
+  function gasCall(fn,arg){return new Promise(function(ok,ng){google.script.run.withSuccessHandler(ok).withFailureHandler(ng)[fn](arg);});}
+  async function getList(){
+    if(GAS) return gasCall('apiList');
+    var r=await fetch(API+(API.indexOf('?')<0?'?':'&')+'api=1',{cache:'no-store'}); return r.json();
+  }
   function getPass(){try{return localStorage.getItem(PASS_KEY)||'';}catch(_){return '';}}
   function setPass(v){try{if(v)localStorage.setItem(PASS_KEY,v);else localStorage.removeItem(PASS_KEY);}catch(_){}}
   // GASへの書き込み。text/plain にしてCORSの事前確認を避ける
   async function post(body){
+    if(GAS){var g=await gasCall('apiPost',body); if(!g.ok){var ge=new Error(g.error);ge.code=g.error;throw ge;} return g;}
     var r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
     var j=await r.json(); if(!j.ok){var e=new Error(j.error);e.code=j.error;throw e;} return j;
   }
@@ -854,9 +862,9 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
   /* ---------- 保存の仕組み（Googleスプレッドシート） ---------- */
   var fetching=null, lastFetch=0;
   function refresh(force){
-    if(!API||fetching||(!force&&Date.now()-lastFetch<15000)) return fetching;
+    if(!canWrite||fetching||(!force&&Date.now()-lastFetch<15000)) return fetching;
     var st=$('ev-status');
-    fetching=fetch(API,{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+    fetching=getList().then(function(j){
       if(!j.ok) throw new Error('bad');
       events=j.events||[]; st.textContent='';
     }).catch(function(){
@@ -869,7 +877,7 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
     return fetching;
   }
   $('ev-add').hidden=!canWrite;
-  if(!API){ events=STATIC_EVENTS.slice(); loaded=true; $('ev-status').textContent=''; renderList(); }
+  if(!canWrite){ events=STATIC_EVENTS.slice(); loaded=true; $('ev-status').textContent=''; renderList(); }
   show();
   refresh(true);
 })();
