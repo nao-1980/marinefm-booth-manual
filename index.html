@@ -102,7 +102,7 @@ button.btn{border:0;cursor:pointer;font-family:var(--body)}
 .fld{display:grid;gap:4px;font-size:13px;min-width:0;border:0;margin:0;padding:0}
 .fld.wide{grid-column:1/-1}
 .fld>span,.fld>legend{font-weight:700;color:var(--navy)}
-.fld input[type=text],.fld input[type=date],.fld textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+.fld input[type=text],.fld input[type=date],.fld input[type=password],.passin,.fld textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
 .fld input:focus,.fld textarea:focus{outline:none;border-color:var(--sky)}
 .opts{display:flex;flex-wrap:wrap;gap:8px 16px}
 .opt{display:inline-flex;gap:6px;align-items:center;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);cursor:pointer}
@@ -111,6 +111,7 @@ fieldset.fld legend{width:100%;margin-bottom:4px}
 .req{font-style:normal;font-size:11px;color:#fff;background:var(--alert);border-radius:3px;padding:0 5px;margin-left:4px}
 .formbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
 .err{color:var(--alert)}
+.passin{width:auto!important;max-width:200px;padding:5px 8px!important;font-size:14px!important}
 .tbd{color:var(--alert);font-weight:700}
 .evhead{display:grid;gap:2px}
 .evhead .d{font-family:var(--display);font-weight:700;color:var(--deep);font-size:13px}
@@ -585,7 +586,7 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
   <div class="crumb"><a href="#events">← イベント版の一覧</a></div>
   <form class="panel evform" id="ev-form" novalidate>
     <h2 id="ev-form-title">イベントを追加</h2>
-    <p class="note">わかるところだけで大丈夫です。空欄は当日版で「当日朝に確認」と表示されます。<span class="req">必須</span>の3つだけ入れれば保存できます。</p>
+    <p class="note">わかるところだけで大丈夫です。空欄は当日版で「当日朝に確認」と表示されます。<span class="req">必須</span>の項目だけ入れれば保存できます。</p>
 
 
     <h3>基本情報</h3>
@@ -629,6 +630,12 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
     <h3>メモ</h3>
     <label class="fld wide"><span>スタッフへの連絡など</span><textarea id="f-memo" name="memo" rows="2"></textarea></label>
 
+    <h3>保存</h3>
+    <div class="grid2">
+      <label class="fld"><span>スタッフ用パスコード <em class="req">必須</em></span><input id="f-pass" name="passcode" type="password" autocomplete="current-password"></label>
+    </div>
+    <p class="note">パスコードはこの端末に記憶されます。わからないときは責任者に確認してください。</p>
+
     <div class="formbar"><button type="submit" class="btn" id="ev-save">保存して当日版を作る</button><a href="#events" class="btn ghost">キャンセル</a><span class="note err" id="ev-form-msg" role="status"></span></div>
   </form>
 </div>
@@ -647,13 +654,30 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
   </div>
 </footer>
 
+<script src="config.js"></script>
 <script>
 (function(){
   var fixed=['outdoor','indoor','events','kannai','new-event'];
   var navOf={outdoor:'outdoor',indoor:'indoor',events:'events',kannai:'events','new-event':'events',event:'events'};
   var STATIC_EVENTS=[{"aed": "", "aid": "", "alcohol": false, "crowd": false, "date": "2026-11-15", "direction": "海の方向には行かない。避難先は象の鼻パークの津波避難情報板で確認", "hq": "", "kids": true, "lost": "", "map": "横浜市 津波避難情報板（象の鼻パークに設置）", "memo": "時間・本部・救護所・迷子の待機場所は、わかりしだい「編集」から追加してください。", "name": "ホッチポッチ横浜", "org": "", "place": "象の鼻パーク（案内放送ブース）", "river": false, "schedule": "", "sea": true, "setting": "outdoor", "shelterIn": "", "shelters": "", "stage": false, "time": "", "updatedAt": "2026-11-03T01:45:00+09:00", "id": "e-hotchpotch-20261115"}];
-  var HAS_CLAUDE=!!window.claude;
-  var events=[], db=null, user=null, canWrite=false, dl=null, editing=null, loaded=false;
+  var API=(window.EVENTS_API||'').trim();
+  var PASS_KEY='booth-manual-passcode';
+  var events=[], canWrite=!!API, editing=null, loaded=false;
+  function getPass(){try{return localStorage.getItem(PASS_KEY)||'';}catch(_){return '';}}
+  function setPass(v){try{if(v)localStorage.setItem(PASS_KEY,v);else localStorage.removeItem(PASS_KEY);}catch(_){}}
+  // GASへの書き込み。text/plain にしてCORSの事前確認を避ける
+  async function post(body){
+    var r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+    var j=await r.json(); if(!j.ok){var e=new Error(j.error);e.code=j.error;throw e;} return j;
+  }
+  function errText(err){
+    var c=err&&err.code;
+    if(c==='passcode') return 'パスコードが違います。';
+    if(c==='required') return 'イベント名・開催日・会場を入れてください。';
+    if(c==='quota') return '保存できる件数の上限です。古いイベントを削除してから追加してください。';
+    if(c==='busy') return '混み合っています。少し待ってからもう一度押してください。';
+    return '保存できませんでした。通信状況を確認して、もう一度押してください。';
+  }
   function $(id){return document.getElementById(id);}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function val(s,dflt){s=(s||'').trim();return s?esc(s):'<span class="tbd">'+(dflt||'当日朝に確認')+'</span>';}
@@ -672,6 +696,7 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
     });
     if(c.view==='event') renderEvent(c.id);
     if(c.view==='new-event') prepForm();
+    if(c.view==='events') refresh();
   }
   window.addEventListener('hashchange',function(){show();window.scrollTo(0,0);});
 
@@ -692,35 +717,40 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
   var F=['name','date','time','place','org','hq','shelters','direction','map','aid','lost','aed','shelterIn','schedule','memo'];
   var C=['sea','river','crowd','stage','alcohol','kids'];
   function prepForm(){
-    if(!canWrite){ $('ev-form-msg').textContent=db?'このページを編集する権限がありません。オーナーに「Contributor」以上で共有してもらってください。':'保存の仕組みにつながっていません。サインインしてから開き直してください。'; }
+    if(!canWrite){ $('ev-form-msg').textContent='保存先のスプレッドシートが設定されていないため、保存できません。'; }
     var e=editing?events.filter(function(x){return x.id===editing;})[0]:null;
     $('ev-form-title').textContent=e?'イベントを編集':'イベントを追加';
     $('ev-save').textContent=e?'保存する':'保存して当日版を作る';
     F.forEach(function(k){$('f-'+k).value=e?(e[k]||''):'';});
     C.forEach(function(k){$('f-'+k).checked=e?!!e[k]:false;});
     (e&&e.setting==='indoor'?$('f-in'):$('f-out')).checked=true;
+    $('f-pass').value=getPass();
     if(canWrite) $('ev-form-msg').textContent='';
     document.querySelectorAll('.filled').forEach(function(x){x.classList.remove('filled');});
   }
   $('ev-form').addEventListener('submit',async function(ev){
     ev.preventDefault();
     var msg=$('ev-form-msg');
-    if(!db||!canWrite){prepForm();return;}
+    if(!canWrite){prepForm();return;}
     var d={};
     F.forEach(function(k){d[k]=$('f-'+k).value.trim();});
     C.forEach(function(k){d[k]=$('f-'+k).checked;});
     d.setting=$('f-in').checked?'indoor':'outdoor';
     if(!d.name||!d.date||!d.place){msg.textContent='イベント名・開催日・会場を入れてください。';return;}
-    var id=editing||('e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
-    d.updatedAt=new Date().toISOString();
-    try{ if(user){var uid=await user.id(); if(uid) d.updatedBy=uid;} }catch(_){}
+    var pass=$('f-pass').value.trim();
+    if(!pass){msg.textContent='スタッフ用パスコードを入れてください。';$('f-pass').focus();return;}
+    d.id=editing||('e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
     $('ev-save').disabled=true; msg.textContent='保存しています…';
     try{
-      await db.collection('events').doc(id).set(d);
-      editing=null; msg.textContent='';
-      location.hash='e-'+id;
+      await post({action:'save',passcode:pass,event:d});
+      setPass(pass);
+      d.updatedAt=new Date().toISOString();
+      events=events.filter(function(x){return x.id!==d.id;}).concat([d]);
+      renderList(); editing=null; msg.textContent='';
+      location.hash='e-'+d.id;
     }catch(err){
-      msg.textContent=err&&err.code==='quota_exceeded'?'保存できる件数の上限です。古いイベントを削除してから追加してください。':'保存できませんでした。時間をおいてもう一度押してください。';
+      if(err&&err.code==='passcode') setPass('');
+      msg.textContent=errText(err);
     }finally{$('ev-save').disabled=false;}
   });
   $('ev-add').addEventListener('click',function(){editing=null;location.hash='new-event';prepForm();});
@@ -793,12 +823,19 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
     var e=events.filter(function(x){return x.id===id;})[0];
     if(!e){ tools.innerHTML=''; body.innerHTML='<section class="panel"><p>'+(loaded?'このイベントは見つかりませんでした。削除されたか、URLが違う可能性があります。':'読み込み中です…')+'</p></section>'; return; }
     body.innerHTML='<div class="evhead"><span class="d">'+esc(fmtDate(e.date))+'／'+(e.setting==='indoor'?'屋内':'屋外')+'</span><h2 class="evtitle">'+esc(e.name)+'</h2></div>'+eventHTML(e);
-    tools.innerHTML=(dl?'<button type="button" class="btn" id="ev-print">印刷用ファイルを保存</button>':'')+(canWrite?'<button type="button" class="btn ghost" id="ev-edit">編集</button><button type="button" class="btn ghost danger" id="ev-del">削除</button>':'')+'<span class="note" id="ev-tmsg"></span>';
+    tools.innerHTML='<button type="button" class="btn" id="ev-print">印刷する</button>'+(canWrite?'<button type="button" class="btn ghost" id="ev-edit">編集</button><button type="button" class="btn ghost danger" id="ev-del">削除</button>':'')+'<span class="note" id="ev-tmsg"></span>';
     if($('ev-edit')) $('ev-edit').onclick=function(){editing=id;location.hash='new-event';prepForm();};
     if($('ev-del')) $('ev-del').onclick=function(){
       var m=$('ev-tmsg'); m.innerHTML='本当に削除しますか？ <button type="button" class="btn danger" id="ev-del-ok">削除する</button> <button type="button" class="btn ghost" id="ev-del-no">やめる</button>';
       $('ev-del-no').onclick=function(){m.textContent='';};
-      $('ev-del-ok').onclick=async function(){ try{await db.collection('events').doc(id).delete(); location.hash='events';}catch(_){m.textContent='削除できませんでした。もう一度お試しください。';} };
+      if(!getPass()) m.innerHTML+=' <input type="password" id="ev-del-pass" class="passin" placeholder="スタッフ用パスコード" autocomplete="current-password">';
+      $('ev-del-ok').onclick=async function(){
+        var pass=getPass()||($('ev-del-pass')?$('ev-del-pass').value.trim():'');
+        if(!pass){$('ev-del-pass').focus();return;}
+        this.disabled=true;
+        try{ await post({action:'delete',passcode:pass,id:id}); setPass(pass); events=events.filter(function(x){return x.id!==id;}); renderList(); location.hash='events'; }
+        catch(err){ if(err&&err.code==='passcode') setPass(''); m.textContent=err&&err.code==='passcode'?'パスコードが違います。もう一度「削除」から操作してください。':'削除できませんでした。もう一度お試しください。'; }
+      };
     };
     if($('ev-print')) $('ev-print').onclick=async function(){
       var m=$('ev-tmsg');
@@ -807,33 +844,34 @@ footer.foot strong{font-family:var(--display);letter-spacing:.08em}
         '[hidden]{display:none!important}@page{size:A4;margin:14mm}html,body{background:#fff}body{margin:0;font-size:12.5px;line-height:1.7}main .wrap{max-width:none;padding:0;display:grid;gap:12px}.card,tr,.kid{break-inside:avoid}h2{break-after:avoid}.tbl{overflow:visible}table{min-width:0}.ph-head{border-bottom:3px solid #0091db;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}.ph-head b{font-family:var(--display);color:#0b6fbd;font-size:22px}.ph-foot{margin-top:16px;font-size:11px;color:#5d6a76;display:flex;justify-content:space-between}</style></head><body><main><div class="wrap">'+
         '<div class="ph-head"><div><div class="freq"><b style="font-size:13px;background:#0b6fbd;color:#fff;border-radius:4px;padding:1px 8px">86.1MHz</b> マリンFM 案内放送ブース</div><b>有事アナウンス対応マニュアル　'+esc(e.name)+'</b></div><span>資料作成：NAYA WORKS</span></div>'+
         body.innerHTML.replace(/<a href="#(indoor|outdoor)">/g,'<span>').replace(/<\/a>/g,'</span>')+'<div class="ph-foot"><span>マリンFM 86.1MHz 案内放送ブース</span><span>資料作成：NAYA WORKS</span></div></div></main></body></html>';
-      try{ await dl.save({filename:e.date+'_'+e.name.replace(/[\\/:*?"<>|]/g,'')+'_当日版.html',data:doc}); m.textContent='保存しました。ブラウザで開いて印刷するとA4で出せます。'; }
-      catch(err){ m.textContent=err&&err.code==='declined'?'':'保存できませんでした。'; }
+      // 印刷用ページを新しいタブで開き、読み込み後に印刷画面を出す
+      var w=window.open(URL.createObjectURL(new Blob([doc.replace('</body>','<script>addEventListener("load",function(){setTimeout(print,400)})<\/script></body>')],{type:'text/html'})),'_blank');
+      m.textContent=w?'':'ポップアップがブロックされました。ブラウザの設定で許可してください。';
     };
   }
 
 
-  /* ---------- 保存の仕組み ---------- */
-  show();
-  (async function(){
+  /* ---------- 保存の仕組み（Googleスプレッドシート） ---------- */
+  var fetching=null, lastFetch=0;
+  function refresh(force){
+    if(!API||fetching||(!force&&Date.now()-lastFetch<15000)) return fetching;
     var st=$('ev-status');
-    if(!HAS_CLAUDE){ events=STATIC_EVENTS.slice(); loaded=true; st.textContent=''; renderList(); show(); return; }
-    try{ user=await claude.use('user'); }catch(_){}
-    try{ dl=await claude.use('downloads'); }catch(_){}
-    try{ db=await claude.use('db'); }catch(_){ db=null; }
-    if(!db){ st.textContent='追加したイベントを表示するには、claude.aiにサインインした状態で開いてください。'; loaded=true; show(); return; }
-    var w=null; try{ w=user?await user.can('data.write'):null; }catch(_){}
-    canWrite=(w!==false);
-    $('ev-add').hidden=!canWrite;
-    var timer=setTimeout(function(){ if(!loaded) st.textContent='まだ読み込めていません。通信状況を確認してください。'; },10000);
-    db.collection('events').onSnapshot(function(snap){
-      events=snap.docs.map(function(d){var x=Object.assign({},d.data());x.id=d.id;return x;});
-      if(!snap.metadata.fromCache){ loaded=true; clearTimeout(timer); }
-      st.textContent=canWrite?'':'閲覧のみ（イベントの追加はできません）';
-      renderList();
-      var c=current(); if(c.view==='event') renderEvent(c.id);
-    },function(err){ clearTimeout(timer); loaded=true; st.textContent='イベント一覧を読み込めませんでした。ページを開き直してください。'; });
-  })();
+    fetching=fetch(API,{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+      if(!j.ok) throw new Error('bad');
+      events=j.events||[]; st.textContent='';
+    }).catch(function(){
+      if(!events.length) events=STATIC_EVENTS.slice();
+      st.textContent='イベント一覧を読み込めませんでした。通信状況を確認して、ページを開き直してください。';
+    }).then(function(){
+      lastFetch=Date.now(); loaded=true; fetching=null;
+      renderList(); var c=current(); if(c.view==='event') renderEvent(c.id);
+    });
+    return fetching;
+  }
+  $('ev-add').hidden=!canWrite;
+  if(!API){ events=STATIC_EVENTS.slice(); loaded=true; $('ev-status').textContent=''; renderList(); }
+  show();
+  refresh(true);
 })();
 </script>
 
