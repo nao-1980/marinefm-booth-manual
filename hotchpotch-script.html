@@ -145,10 +145,10 @@ const $=s=>document.querySelector(s);
 const G={
  "gst-12m":{h:"12",time:"12時台",ttl:"マーケットエリア",org:"ミューシープロジェクト"},
  "gst-12h":{h:"12",time:"12:30 中継",ttl:"ホッチポッチ横浜 主催・認定NPO法人アークシップ 代表",org:"アークシップ",def:"長谷川 篤司",nomark:true},
- "gst-13":{h:"13",time:"13時台",ttl:"あそべるエリア（マーケットエリアのテント内）",org:"学生団体ニューコロンブス"},
- "gst-14":{h:"14",time:"14時台",ttl:"マーケットエリア出店",org:"エコルシェ みうらん"},
- "gst-15":{h:"15",time:"15時台",ttl:"ステージ出演者（YOKO 15:55〜）",org:"N.U."},
- "gst-16":{h:"16",time:"16時台",ttl:"ステージ出演者・フィナーレPR大使",org:"ロドリゲス★KEN"}
+ "gst-13":{h:"13",time:"13時台",ttl:"あそべるエリア（マーケットエリアのテント内）",org:"学生団体ニューコロンブス",pre:{name:"ふるやたいが",kana:"",memo:"何でも知ってる",done:true}},
+ "gst-14":{h:"14",time:"14時台",ttl:"マーケットエリア出店",org:"エコルシェ みうらん",pre:{name:"みうらん",kana:"",memo:"えこるしぇ",done:true}},
+ "gst-15":{h:"15",time:"15時台",ttl:"ステージ出演者（YOKO 15:55〜）",org:"N.U.",pre:{name:"えぬゆー",kana:"",memo:"ステージ出演",done:true}},
+ "gst-16":{h:"16",time:"16時台",ttl:"ステージ出演者・フィナーレPR大使",org:"ロドリゲス★KEN",pre:{name:"ロドリゲス★KEN",kana:"",memo:"ぼんおどり 16:45",done:true}}
 };
 const markOwner={"12":"gst-12m","13":"gst-13","14":"gst-14","15":"gst-15","16":"gst-16"};
 const marks={};
@@ -335,6 +335,7 @@ build();
   document.querySelectorAll("details.sec").forEach(d=>d.addEventListener("toggle",sync)); sync();
 })();
 try{Object.assign(state,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+for(const id in G){ if(G[id].pre && !state[id]) state[id]={...G[id].pre} }
 paintAll();
 
 (async()=>{
