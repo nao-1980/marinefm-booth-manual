@@ -56,14 +56,6 @@ function setup() {
   var sheet = sheet_();
   sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
   sheet.setFrozenRows(1);
-  // 移行前からページに載っていたイベントを登録しておく
-  if (rowIndexOf_(sheet, 'e-hotchpotch-20261115') < 0) {
-    saveEvent_({ id: 'e-hotchpotch-20261115', name: 'ホッチポッチ横浜', date: '2026-11-15', setting: 'outdoor',
-      place: '象の鼻パーク（案内放送ブース）', sea: true, kids: true,
-      direction: '海の方向には行かない。避難先は象の鼻パークの津波避難情報板で確認',
-      map: '横浜市 津波避難情報板（象の鼻パークに設置）',
-      memo: '時間・本部・救護所・迷子の待機場所は、わかりしだい「編集」から追加してください。' });
-  }
 }
 
 function checkPasscode_(input) {
