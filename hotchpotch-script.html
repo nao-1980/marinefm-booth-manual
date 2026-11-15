@@ -44,10 +44,20 @@ nav a{flex:none;text-decoration:none;color:var(--navy);background:var(--surface)
   padding:3px 11px;font-size:.82rem;font-weight:700;font-variant-numeric:tabular-nums}
 nav a .dot{display:inline-block;min-width:1.3em;margin-left:5px;padding:0 5px;border-radius:999px;font-size:.7rem;background:var(--blue-bg);color:var(--blue)}
 nav a .dot.ok{background:var(--ok-bg);color:var(--ok)}
-section{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:16px;overflow:hidden;scroll-margin-top:110px}
-section>h2{margin:0;padding:10px 14px;font-family:var(--f-head);font-size:1.15rem;color:var(--navy);border-bottom:2px solid var(--navy);
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-section>h2 small{font-family:var(--f-body);font-size:.75rem;color:var(--muted);font-weight:500}
+details.sec{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:16px;overflow:hidden;scroll-margin-top:150px}
+details.sec>summary{list-style:none;cursor:pointer;margin:0;padding:12px 14px;font-family:var(--f-head);font-size:1.15rem;color:var(--navy);font-weight:900;
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec[open]>summary{border-bottom:2px solid var(--navy)}
+.sm-r{display:flex;align-items:center;gap:8px;font-family:var(--f-body);font-size:.75rem;font-weight:700}
+.sm-r .left{background:var(--blue-bg);color:var(--blue);border-radius:999px;padding:1px 8px}
+.sm-r .left.ok{background:var(--ok-bg);color:var(--ok)}
+.sm-r .gname{color:var(--gold);max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sm-r .gname.ok{color:var(--ok)}
+.sm-r .arw{color:var(--muted);transition:transform .15s}
+details.sec[open] .sm-r .arw{transform:rotate(180deg)}
+.allbtn{font:inherit;font-size:.75rem;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:3px 10px;cursor:pointer;flex:none}
+details.sec>summary small{font-family:var(--f-body);font-size:.75rem;color:var(--muted);font-weight:500}
 .row{display:grid;grid-template-columns:3.6em 1fr;gap:0 10px;padding:5px 14px;border-top:1px solid transparent}
 .row.cue{border-top-color:var(--line);margin-top:2px;padding-top:8px}
 .tm{font-variant-numeric:tabular-nums;font-weight:700;font-size:.82rem;color:var(--navy);line-height:1.9}
@@ -200,18 +210,28 @@ function chkItem(id,timeTxt,title,q,sec){
   return det;
 }
 
+const secInfo={};
+function secSum(title,sub,sid){
+  const sm=mk("summary"); const l=mk("span"); l.append(document.createTextNode(title+" "),mk("small","",sub));
+  const r=mk("span","sm-r"); const gn=mk("span","gname",""); const lf=mk("span","left",""); r.append(gn,lf,mk("span","arw","▾"));
+  sm.append(l,r); secInfo[sid]={gn,lf}; return sm;
+}
+function openTo(sid,targetId){
+  const s=document.getElementById(sid); if(!s)return; s.open=true;
+  requestAnimationFrame(()=>document.getElementById(targetId||sid).scrollIntoView({behavior:"smooth",block:"start"}));
+}
 function build(){
   const nav=$("#nav"), main=$("#main");
   // 全体
-  const g=mk("section","genl"); g.id="s-g";
-  const h=mk("h2"); h.append(mk("span","","放送開始前の確認"), mk("small","","10:50までに本部へ")); g.appendChild(h);
+  const g=mk("details","sec genl"); g.id="s-g";
+  g.appendChild(secSum("放送開始前","10:50まで","s-g"));
   D.general.forEach(([id,t,q])=>g.appendChild(chkItem(id,"",t,q,"s-g")));
   main.appendChild(g);
   addNav("s-g","開始前");
   D.hours.forEach(H=>{
     const sid="s-"+H.h.slice(0,2);
-    const s=mk("section"); s.id=sid;
-    const h2=mk("h2"); h2.append(mk("span","",H.h), mk("small","",H.h.startsWith("10")?"BGMのみ・案内放送なし":"")); s.appendChild(h2);
+    const s=mk("details","sec"); s.id=sid;
+    s.appendChild(secSum(H.h,H.h.startsWith("10")?"BGMのみ":"",sid));
     H.rows.forEach(r=>{
       if(!r){s.appendChild(mk("div","gap"));return}
       const [t,d,c,n,k,id]=r;
@@ -231,7 +251,7 @@ function build(){
 function addNav(sid,label){
   const a=mk("a"); a.href="#"+sid; a.textContent=label; a.dataset.sid=sid;
   a.appendChild(mk("span","dot",""));
-  a.addEventListener("click",e=>{e.preventDefault();document.getElementById(sid).scrollIntoView({behavior:"smooth"})});
+  a.addEventListener("click",e=>{e.preventDefault();openTo(sid)});
   $("#nav").appendChild(a);
 }
 
@@ -250,7 +270,17 @@ function paint(id){
   e.memo.textContent=v.memo||"";
   if(document.activeElement!==e.ta) e.ta.value=v.memo||"";
 }
-function totals(){
+function secs(){
+  for(const sid in secInfo){const ids=groups[sid]||[];const {gn,lf}=secInfo[sid];
+    const chk=ids.filter(i=>!els[i].guest), gs=ids.filter(i=>els[i].guest);
+    const left=chk.filter(i=>!(state[i]&&state[i].done)).length;
+    lf.style.display=chk.length?"":"none"; lf.textContent=left?`確認 残り${left}`:"確認 ✓"; lf.classList.toggle("ok",!left);
+    const names=gs.map(i=>nameOf(i)).filter(Boolean);
+    gn.style.display=gs.length?"":"none"; gn.textContent=gs.length?("ゲスト "+(names.length?names.join("・"):"未入力")):"";
+    gn.classList.toggle("ok",gs.length&&gs.every(i=>state[i]&&state[i].done));
+  }
+}
+function totals(){ secs();
   const ids=Object.keys(els); const n=ids.filter(i=>state[i]&&state[i].done).length;
   $("#count").textContent=`${n} / ${ids.length} 確認済み`;
   $("#fill").style.width=(ids.length?n/ids.length*100:0)+"%";
@@ -265,7 +295,7 @@ function roster(){
   const R=$("#roster"); R.textContent="";
   Object.keys(G).forEach(id=>{const v=state[id]||{};const a=mk("a",v.done?"ok":"");a.href="#"+id;
     a.append(mk("b","",G[id].time),document.createTextNode(G[id].org));const nm=nameOf(id);a.appendChild(mk("span",nm?"":"empty",nm?nm+" さん":"未入力"));
-    a.onclick=e=>{e.preventDefault();document.getElementById(id).scrollIntoView({behavior:"smooth",block:"start"})};R.appendChild(a)});
+    a.onclick=e=>{e.preventDefault();openTo(document.getElementById(id).closest("details.sec").id,id)};R.appendChild(a)});
 }
 function paintAll(){Object.keys(els).forEach(paint);totals();roster()}
 function lineText(){
@@ -295,6 +325,15 @@ async function flush(id){
 }
 
 build();
+(function(){const b=mk("button","allbtn","すべて閉じる");b.type="button";
+  b.onclick=()=>{const any=[...document.querySelectorAll("details.sec")].some(d=>d.open);document.querySelectorAll("details.sec").forEach(d=>d.open=!any);b.textContent=any?"すべて開く":"すべて閉じる"};
+  $("#nav").prepend(b);
+  const hh=Number(new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Tokyo",hour:"numeric",hourCycle:"h23"}).format(new Date()));
+  const cur=document.getElementById("s-"+hh); (cur||document.getElementById(hh<11?"s-g":"s-16")).open=true;
+  if(hh<11) document.getElementById("s-11").open=true;
+  const sync=()=>{b.textContent=[...document.querySelectorAll("details.sec")].some(d=>d.open)?"すべて閉じる":"すべて開く"};
+  document.querySelectorAll("details.sec").forEach(d=>d.addEventListener("toggle",sync)); sync();
+})();
 try{Object.assign(state,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
 paintAll();
 
