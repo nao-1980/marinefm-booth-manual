@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>ホッチポッチ ゲスト台本</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+/* 12:30〜16時台の台本。ゲスト欄は開閉式で入力、閉じても名前が見え、台本中の【　】にも自動で入る */
+:root{
+  --bg:#f3f5f8; --surface:#fff; --fg:#14213a; --muted:#5b6780; --line:#d9dfe8;
+  --navy:#173a6b; --rain:#c62828; --rain-bg:#fdecec; --blue:#0057d9; --blue-bg:#eaf1fd;
+  --gold:#a85d00; --gold-bg:#fff4e2; --ok:#1f7a4d; --ok-bg:#e7f5ee;
+  --f-head:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-body:"Noto Sans JP","Hiragino Sans",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1622; --surface:#172131; --fg:#e7ecf4; --muted:#9aa6bb; --line:#2a3850;
+  --navy:#8fb4ea; --rain:#ff8a80; --rain-bg:#3a1c1c; --blue:#7fb0ff; --blue-bg:#16263f;
+  --gold:#f4b660; --gold-bg:#3a2a12; --ok:#6fd0a0; --ok-bg:#16301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1622; --surface:#172131; --fg:#e7ecf4; --muted:#9aa6bb; --line:#2a3850;
+  --navy:#8fb4ea; --rain:#ff8a80; --rain-bg:#3a1c1c; --blue:#7fb0ff; --blue-bg:#16263f;
+  --gold:#f4b660; --gold-bg:#3a2a12; --ok:#6fd0a0; --ok-bg:#16301f; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto}
+header h1{font-family:var(--f-head);font-weight:900;font-size:1.4rem;margin:0;color:var(--navy);text-wrap:balance}
+header p{margin:2px 0 0;color:var(--muted);font-size:.82rem}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0 8px;margin-bottom:6px}
+.prog{display:flex;align-items:center;gap:10px}
+.track{flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--ok);transition:width .2s}
+.count{font-variant-numeric:tabular-nums;font-weight:700;font-size:.88rem;white-space:nowrap}
+.sync{font-size:.72rem;color:var(--muted);white-space:nowrap}
+.roster{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.roster a{text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:6px;padding:4px 8px;font-size:.76rem;line-height:1.35;flex:none;width:150px}
+.roster a.ok{border-left-color:var(--ok)}
+.roster a b{color:var(--navy);font-variant-numeric:tabular-nums;margin-right:4px}
+.roster a span{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.roster a span.empty{color:var(--muted);font-weight:500}
+section{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:16px;overflow:hidden;scroll-margin-top:120px}
+section>h2{margin:0;padding:10px 14px;font-family:var(--f-head);font-size:1.15rem;color:var(--navy);border-bottom:2px solid var(--navy)}
+.row{display:grid;grid-template-columns:3.6em 1fr;gap:0 10px;padding:5px 14px}
+.row.cue{border-top:1px solid var(--line);margin-top:2px;padding-top:8px}
+.tm{font-variant-numeric:tabular-nums;font-weight:700;font-size:.82rem;color:var(--navy);line-height:1.9}
+.tm span{display:block;font-weight:500;color:var(--muted);font-size:.72rem;line-height:1.2}
+.c{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.n{display:block;font-size:.76rem;color:var(--muted)}
+.row.hd .c{font-weight:700;color:var(--navy)}
+.row.r{background:var(--rain-bg)} .row.r .c{color:var(--rain);font-weight:700}
+.row.b .c{color:var(--blue);font-weight:700}
+.gap{height:8px}
+mark.nm{background:var(--gold-bg);color:var(--gold);font-weight:900;padding:0 3px;border-radius:3px}
+mark.nm.ok{background:var(--ok-bg);color:var(--ok)}
+details.gst{margin:6px 10px;border:2px solid var(--gold);border-radius:8px;background:var(--gold-bg);scroll-margin-top:120px}
+details.gst.done{border-color:var(--ok);background:var(--ok-bg)}
+details.gst>summary{list-style:none;cursor:pointer;padding:9px 10px 9px 12px;display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;align-items:start}
+details.gst>summary::-webkit-details-marker{display:none}
+.badge{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;margin-top:3px;background:var(--surface);color:var(--gold);border:1px solid var(--gold)}
+details.gst.done .badge{background:var(--ok);color:#fff;border-color:var(--ok)}
+.st{min-width:0}
+.st .ttl{display:block;font-size:.78rem;color:var(--muted);overflow-wrap:anywhere}
+.st .org{display:block;font-weight:700;color:var(--navy)}
+.st .who{display:block;font-size:1.05rem;font-weight:900;margin-top:2px;overflow-wrap:anywhere}
+.st .who.empty{font-size:.85rem;font-weight:500;color:var(--muted)}
+.st .mm{display:block;font-size:.8rem;color:var(--fg);white-space:pre-wrap;overflow-wrap:anywhere}
+.st .mm:empty{display:none}
+details[open] .st .who,details[open] .st .mm{display:none}
+.chev{color:var(--muted);transition:transform .15s;margin-top:3px}
+details[open] .chev{transform:rotate(180deg)}
+.body{padding:0 12px 12px;display:grid;gap:8px}
+.body label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:2px}
+.body input,.body textarea{width:100%;font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg)}
+.body textarea{min-height:56px;resize:vertical}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:.88rem;font-weight:700;border-radius:6px;padding:7px 14px;cursor:pointer;border:1px solid var(--ok);background:var(--ok);color:#fff}
+.btn.sub{background:var(--surface);color:var(--muted);border-color:var(--line)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+footer{color:var(--muted);font-size:.78rem;margin-top:8px}
+.send{display:block;width:100%;font:inherit;font-weight:900;font-size:1rem;padding:12px;border:0;border-radius:10px;background:#06c755;color:#fff;cursor:pointer;margin-top:4px}
+.topsend{margin-left:auto;font:inherit;font-size:.78rem;font-weight:700;border:0;border-radius:999px;padding:4px 12px;background:#06c755;color:#fff;cursor:pointer;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>ゲスト入力つき台本 12:30〜16時台</h1>
+    <p>11/15(日) ホッチポッチ横浜｜はまリポ情報部｜雨天版</p>
+  </header>
+  <div class="top">
+    <div class="prog"><div class="track"><div class="fill" id="fill"></div></div><span class="count" id="count">0 / 0 確定</span><button class="topsend" id="send2" type="button">LINEで送る</button></div>
+    <div class="roster" id="roster"></div>
+  </div>
+  <div id="main"></div>
+  <button class="send" id="send" type="button">入力内容をLINEで送る</button>
+  <footer>オレンジ＝未確定／緑＝確定。入力した名前は台本の【　】にも自動で入ります。<br>入力はこの端末に保存されます。決まったら下の「LINEで送る」で共有してください。</footer>
+</div>
+
+<script>
+const D=[{"h": "12時台", "rows": [["12:30", "10'00\"", "【中継】マリンFM「ハンマーヘッド サウンドクルーズ」", "スタジオからの呼びかけで入る", ""], ["", "", "（スタジオ）会場の舟守さん、筒井さ～ん！", "スタジオ側の台本に合わせる", ""], ["", "", "（舟守さん）はーい！横浜・象の鼻パークで開催中の「ホッチポッチ横浜」の会場からお届けしています！\nこの時間は、ホッチポッチ横浜を主催する認定NPO法人アークシップの代表、長谷川篤司さんをゲストにお迎えしました！\n長谷川さん、本日はよろしくお願いいたします！", "", ""], ["", "", "・ホッチポッチ横浜とは（市民手づくり・観覧無料の音楽祭／17:30まで）", "", ""], ["", "", "・今のステージ：12:22〜13:07 HAMAステージ ダンス（出演状況を確認して紹介）", "調整中", "b"], ["", "", "・アットヨコハマの18区デジタルスタンプラリー", "", ""], ["", "", "・ゲスト／来場者に一言インタビュー", "可能なら", ""], ["", "", "・17:00〜 フィナーレ「横浜ごちゃまぜ盆踊り」のお知らせ", "", ""], ["", "", "（筒井さん）以上、ホッチポッチ横浜の会場からでした！スタジオにお返しします〜", "", ""], ["12:40", "00'30\"", "（舟守さん）", "", ""], ["", "", "以上、はまリポ情報部でした。次回は 13時台、YOKOステージにファンク＋ロックが登場します！", "", ""], ["", "", "（舟守さん・筒井さん）いってらっしゃい！", "", ""], ["12:40", "00'10\"", "🎵　06 END_1PAGE_[INST]", "終了BGM", ""], ["12:40", "19'20\"", "～　選曲②：1990〜1994　～", "約19分／次の時間の :00 まで", ""], ["", "", "3. 熱き星たちよ／横浜ベイスターズ球団歌（1993）", "横浜にストーリーがある曲／チアスクール出演に合わせて／音源は2025・MAIN MIX／チア出演は調整中", "b"], ["", "", "4. 涙のキッス／サザンオールスターズ（1992）", "提案曲", ""], ["", "", "5. 花咲く旅路／原由子（1991）", "横浜にストーリーがある曲（横浜出身）", ""], ["", "", "6. 真夏の果実／サザンオールスターズ（1990）", "提案曲", ""], ["", "", "予備：どんなときも。／槇原敬之（1991）、希望の轍／サザンオールスターズ（1990）、君がいるだけで／米米CLUB（1992）", "尺が余ったら追加", ""]]}, {"h": "13時台", "rows": [["13:00", "00'10\"", "🎵　03 J はまリポ情報部", "ジングル", ""], null, ["13:00", "04'50\"", "（舟守さん）", "BGM", ""], ["", "", "ホッチポッチ横浜にお越しの皆さん、こんにちは！", "", ""], ["", "", "はまリポ情報部が、象の鼻パークの案内放送ブースから13時台のご案内をお届けします。", "", ""], null, ["", "", "〜　この時間のステージ　〜", "", ""], ["", "", "雨天のため「ラヴィッツ松尾&His Hair with Exte. Horns Featuring Emy」は中止となりました。", "雨天変更", "r"], ["", "", "13:40〜14:00　YOKOステージ「横濱シスターズ」（ボーカルグループ）", "HAMA→YOKOに変更／時間は本部へ確認", "b"], null, ["", "", "〜　会場エリアのご案内　〜", "", ""], ["", "", "・やぐらワークショップ「みなとキャンパス大作戦」は本部近くのテントで 14:00 まで。参加はお早めに！", "雨天変更", "r"], ["", "", "・あそべるエリアはマーケットエリアのテント内で開催（シーラバー／グーチョキパー／クセつよ）", "雨天変更", "r"], null, ["", "", "〜　今の会場の様子　〜", "当日の様子を一言", ""], null, ["13:05", "10'00\"", "（筒井さん）", "", ""], ["", "", "ここからは「ホッチポッチの達人」！今日の達人はこの方です。", "ゲスト不在時は省略可", ""], ["", "", "本日のゲストは、あそべるエリア（マーケットエリアのテント内）「学生団体ニューコロンブス」から、【　　　　　　　　】さんです！どうぞよろしくお願いします！", "雨天変更", "r"], ["", "", "・団体の活動紹介／あそべるエリアで体験できること／参加者へのおすすめ", "質問例。ゲストの回答に合わせて進行", ""], null, ["", "", "（舟守さん）", "", ""], ["", "", "「学生団体ニューコロンブス」の【　　　　　　　　】さん、ありがとうございました！", "", ""], null, ["13:15", "02'00\"", "（筒井さん）", "BGM", ""], ["", "", "次回は 14時台のご案内です。", "", ""], null, ["", "", "アットヨコハマ公式Instagramライブのコメントもお待ちしています♪", "", ""], ["", "", "以上、はまリポ情報部でした。この後もホッチポッチ横浜をお楽しみください！", "", ""], ["", "", "（舟守さん・筒井さん）いってらっしゃい！", "", ""], ["13:17", "00'10\"", "🎵　06 END_1PAGE_[INST]", "終了BGM", ""], null, ["13:17", "42'50\"", "～　選曲：1995〜1999　～", "約43分／次の時間の :00 まで", ""], ["", "", "1. ガッツだぜ!!／ウルフルズ（1995）", "", ""], ["", "", "2. あなただけを 〜Summer Heartbreak〜／サザンオールスターズ（1995）", "提案曲", ""], ["", "", "3. Trust／浜崎あゆみ（1998）", "リクエスト", ""], ["", "", "4. ひかりへ／MEID（2024）", "", ""], ["", "", "5. A Song for ××／浜崎あゆみ（1999）", "リクエスト", ""], ["", "", "6. 名もなき詩／Mr.Children（1996）", "", ""], ["", "", "7. LOVE AFFAIR 〜秘密のデート〜／サザンオールスターズ（1998）", "提案曲／横浜にストーリーがある曲（マリンルージュ）", ""], ["", "", "8. 夏色／ゆず（1998）", "横浜にストーリーがある曲（伊勢佐木町の路上から）", ""], ["", "", "9. Boys & Girls／浜崎あゆみ（1999）", "リクエスト", ""], ["", "", "予備：ロビンソン／スピッツ（1995）、One more time, One more chance／山崎まさよし（1997）、First Love／宇多田ヒカル（1999）、LOVEマシーン／モーニング娘。（1999）", "尺が余ったら追加", ""]]}, {"h": "14時台", "rows": [["14:00", "00'10\"", "🎵　03 J はまリポ情報部", "ジングル", ""], null, ["14:00", "04'50\"", "（筒井さん）", "BGM", ""], ["", "", "ホッチポッチ横浜にお越しの皆さん、こんにちは！", "", ""], ["", "", "はまリポ情報部が、象の鼻パークの案内放送ブースから14時台のご案内をお届けします。", "", ""], null, ["", "", "〜　この時間のステージ　〜", "", ""], ["", "", "雨天のため「peak echoes」は中止となりました。", "雨天変更", "r"], ["", "", "14:30〜14:50　HAMAステージ「YOKOHAMA男子」（アイドル）", "調整中→放送前に本部へ確認", "b"], null, ["", "", "〜　会場エリアのご案内　〜", "", ""], ["", "", "・やぐらワークショップ（本部近くのテント）の作品にも注目！", "雨天変更", "r"], ["", "", "・マーケットエリアは 16:30 まで", "", ""], null, ["", "", "〜　今の会場の様子　〜", "当日の様子を一言", ""], null, ["14:05", "10'00\"", "（舟守さん）", "", ""], ["", "", "ここからは「ホッチポッチの達人」！今日の達人はこの方です。", "ゲスト不在時は省略可", ""], ["", "", "本日のゲストは、マーケットエリア「エコルシェ みうらん」から、【　　　　　　　　】さんです！どうぞよろしくお願いします！", "出演予定（担当者名・人数は当日確認）", "b"], ["", "", "・出店内容やおすすめ商品／活動で大切にしていること／来場者へのひとこと", "質問例。ゲストの回答に合わせて進行", ""], null, ["", "", "（筒井さん）", "", ""], ["", "", "「エコルシェ みうらん」の【　　　　　　　　】さん、ありがとうございました！", "", ""], null, ["14:15", "02'00\"", "（舟守さん）", "BGM", ""], ["", "", "次回は 15時台。聲明やN.U.のステージをご案内します！", "雨天変更", "r"], null, ["", "", "アットヨコハマ公式Instagramライブのコメントもお待ちしています♪", "", ""], ["", "", "以上、はまリポ情報部でした。この後もホッチポッチ横浜をお楽しみください！", "", ""], ["", "", "（舟守さん・筒井さん）いってらっしゃい！", "", ""], ["14:17", "00'10\"", "🎵　06 END_1PAGE_[INST]", "終了BGM", ""], null, ["14:17", "42'50\"", "～　選曲：2000〜2009　～", "約43分／次の時間の :00 まで", ""], ["", "", "1. HOTEL PACIFIC／サザンオールスターズ（2000）", "提案曲／神奈川", ""], ["", "", "2. evolution／浜崎あゆみ（2001）", "リクエスト", ""], ["", "", "3. TSUNAMI／サザンオールスターズ（2000）", "提案曲", ""], ["", "", "4. タイガー&ドラゴン／クレイジーケンバンド（2002）", "横浜にストーリーがある曲（本牧）", ""], ["", "", "5. SEASONS／浜崎あゆみ（2000）", "リクエスト", ""], ["", "", "6. 虹／ゆず（2009）", "横浜にストーリーがある曲", ""], ["", "", "7. Dearest／浜崎あゆみ（2001）", "リクエスト", ""], ["", "", "8. 栄光の架橋／ゆず（2004）", "横浜にストーリーがある曲", ""], ["", "", "9. ultra soul／B'z（2001）", "", ""], ["", "", "予備：Vogue／浜崎あゆみ（2000）、fairyland／浜崎あゆみ（2005）、SAKURA／いきものがかり（2006）", "尺が余ったら追加", ""]]}, {"h": "15時台", "rows": [["15:00", "00'10\"", "🎵　03 J はまリポ情報部", "ジングル", ""], null, ["15:00", "04'50\"", "（舟守さん）", "BGM", ""], ["", "", "ホッチポッチ横浜にお越しの皆さん、こんにちは！", "", ""], ["", "", "はまリポ情報部が、象の鼻パークの案内放送ブースから15時台のご案内をお届けします。", "", ""], null, ["", "", "〜　この時間のステージ　〜", "", ""], ["", "", "雨天のため「Cherry Picking」は中止となりました。", "雨天変更", "r"], ["", "", "15:20〜15:35　YOKOステージ「真言聲明」（お経）", "HAMA→YOKOに変更／時間は本部へ確認", "b"], ["", "", "15:35〜16:00　HAMAステージ「マーチング」", "実施有無を本部へ確認", "b"], ["", "", "", "雨天のお知らせに記載なし→本部へ確認", "r"], ["", "", "15:55〜16:20　YOKOステージ「N.U.」（アコースティック）", "", ""], null, ["", "", "〜　会場エリアのご案内　〜", "", ""], ["", "", "・マーケットエリアは 16:30 まで。お買い物はお早めに", "", ""], ["", "", "・あそべるエリア（マーケットエリアのテント内）は 17:00 まで", "雨天変更", "r"], null, ["", "", "〜　今の会場の様子　〜", "当日の様子を一言", ""], null, ["15:05", "10'00\"", "（筒井さん）", "", ""], ["", "", "ここからは「ホッチポッチの達人」！今日の達人はこの方です。", "ゲスト不在時は省略可", ""], ["", "", "本日のゲストは、ステージ出演者「N.U.」から、【　　　　　　　　】さんです！どうぞよろしくお願いします！", "出演予定（担当者名・人数は当日確認）", "b"], ["", "", "・音楽活動の紹介／15:55からのステージの見どころ／来場者へのひとこと", "質問例。ゲストの回答に合わせて進行", ""], null, ["", "", "（舟守さん）", "", ""], ["", "", "「N.U.」の【　　　　　　　　】さん、ありがとうございました！", "", ""], null, ["15:15", "02'00\"", "（筒井さん）", "BGM", ""], ["", "", "次回は 16時台、本日最後のご案内です。", "", ""], null, ["", "", "アットヨコハマ公式Instagramライブのコメントもお待ちしています♪", "", ""], ["", "", "以上、はまリポ情報部でした。この後もホッチポッチ横浜をお楽しみください！", "", ""], ["", "", "（舟守さん・筒井さん）いってらっしゃい！", "", ""], ["15:17", "00'10\"", "🎵　06 END_1PAGE_[INST]", "終了BGM", ""], null, ["15:17", "42'50\"", "～　選曲：2010〜2019　～", "約43分／次の時間の :00 まで", ""], ["", "", "1. 新宝島／サカナクション（2015）", "", ""], ["", "", "2. 炎と森のカーニバル／SEKAI NO OWARI（2013）", "横浜にストーリーがある曲（コスモワールド）", ""], ["", "", "3. 雨のち晴レルヤ／ゆず（2013）", "横浜にストーリーがある曲", ""], ["", "", "4. 東京VICTORY／サザンオールスターズ（2014）", "提案曲", ""], ["", "", "5. ありがとう／いきものがかり（2010）", "神奈川", ""], ["", "", "6. ひまわりの約束／秦基博（2014）", "横浜にストーリーがある曲（横浜育ち）", ""], ["", "", "7. マリーゴールド／あいみょん（2018）", "", ""], ["", "", "8. 恋／星野源（2016）", "", ""], ["", "", "9. U.S.A.／DA PUMP（2018）", "", ""], ["", "", "予備：前前前世／RADWIMPS（2016）、パプリカ／Foorin（2018）、香水／瑛人（2019）", "尺が余ったら追加", ""]]}, {"h": "16時台", "rows": [["16:00", "00'10\"", "🎵　03 J はまリポ情報部", "ジングル", ""], null, ["16:00", "04'50\"", "（筒井さん）", "BGM", ""], ["", "", "ホッチポッチ横浜にお越しの皆さん、こんにちは！", "", ""], ["", "", "はまリポ情報部が、象の鼻パークの案内放送ブースから16時台のご案内をお届けします。", "", ""], ["", "", "〜　この時間のステージ　〜", "", ""], ["", "", "〜16:20　YOKOステージ「N.U.」（アコースティック）", "", ""], ["", "", "雨天のため「蛇三線ロックバンドティダ」は中止となりました。", "雨天変更", "r"], ["", "", "〜　会場エリアのご案内　〜", "", ""], ["", "", "・マーケットエリアは 16:30 まで", "", ""], ["", "", "・あそべるエリア（マーケットエリアのテント内）は 17:00 まで", "雨天変更", "r"], ["", "", "〜　今の会場の様子　〜", "当日の様子を一言", ""], ["16:05", "10'00\"", "（舟守さん）", "", ""], ["", "", "ここからは「ホッチポッチの達人」！今日の達人はこの方です。", "ゲスト不在時は省略可", ""], ["", "", "本日のゲストは、ステージ出演者・フィナーレPR大使「ロドリゲス★KEN」から、【　　　　　　　　】さんです！どうぞよろしくお願いします！", "出演予定（担当者名・人数は当日確認）", "b"], ["", "", "・フィナーレPR大使としての思い／17:00からの横浜ごちゃまぜ盆踊りの楽しみ方／来場者へのひとこと", "質問例。ゲストの回答に合わせて進行", ""], ["", "", "（筒井さん）", "", ""], ["", "", "「ロドリゲス★KEN」の【　　　　　　　　】さん、ありがとうございました！", "", ""], ["16:15", "02'00\"", "（舟守さん）", "BGM", ""], ["", "", "〜　17時台のご案内　〜", "", ""], ["", "", "17:00〜17:30　フィナーレ「横浜ごちゃまぜ盆踊り」　やぐら周辺", "", ""], ["", "", "参加無料・申込不要。振付を覚えていなくても大丈夫！", "", ""], ["", "", "お客さんも出演者もスタッフも、みんなで輪になって2日間を締めくくりましょう。", "", ""], ["", "", "ホッチポッチ横浜は 17:30 で終了です。", "", ""], ["", "", "アットヨコハマ公式Instagramライブのコメントもお待ちしています♪", "", ""], ["", "", "・クラウドファンディングは本日まで", "", ""], ["", "", "・お帰りの際は　　　　　　　　　　　　　", "帰り道・混雑・忘れ物の案内は当日記入", ""], ["", "", "今日の案内放送はこれでおしまい。お相手は、はまリポ情報部の「舟守はるな」と", "", ""], ["", "", "（筒井さん）「筒井美結」でした！", "", ""], ["", "", "（舟守さん・筒井さん）17時、やぐらにお集まりください！", "", ""], ["16:17", "00'10\"", "🎵　06 END_1PAGE_[INST]", "終了BGM", ""], ["16:17", "42'50\"", "～　選曲：2020〜　～", "約43分／17:00 フィナーレまで", ""], ["", "", "1. カリスマックス／Snow Man（2025）", "リクエスト", ""], ["", "", "2. EGO／Travis Japan（2026）", "リクエスト", ""], ["", "", "3. 恋をとめないで／The Biscats（2026）", "リクエスト／COMPLEXのカバー", ""], ["", "", "4. マイオンリー／SixTONES（2026）", "リクエスト", ""], ["", "", "5. My Hometown／The Biscats（2022）", "リクエスト", ""], ["", "", "6. こっから／SixTONES（2023）", "リクエスト", ""], ["", "", "7. ハートのエース／The Biscats（2020）", "リクエスト", ""], ["", "", "8. 1PAGE／MEID（2021）", "", ""], ["", "", "9. ざけんな!／The Biscats（2026）", "リクエスト／盆踊りへ", ""], ["", "", "10. ケセラセラ／Mrs. GREEN APPLE（2023）", "", ""], ["", "", "予備：恋はあせらず／The Biscats（2020）、新時代／Ado（2022）、アイドル／YOASOBI（2023）", "尺が余ったら追加", ""]]}];
+const G={ // ゲスト定義（時間台 → 肩書・団体）
+ "12":{time:"12:30〜 中継",ttl:"ホッチポッチ横浜 主催・認定NPO法人アークシップ 代表",org:"アークシップ",def:"長谷川 篤司"},
+ "13":{time:"13時台",ttl:"あそべるエリア（マーケットエリアのテント内）",org:"学生団体ニューコロンブス"},
+ "14":{time:"14時台",ttl:"マーケットエリア出店",org:"エコルシェ みうらん"},
+ "15":{time:"15時台",ttl:"ステージ出演者（YOKO 15:55〜）",org:"N.U."},
+ "16":{time:"16時台",ttl:"ステージ出演者・フィナーレPR大使",org:"ロドリゲス★KEN"}
+};
+const state={}; const KEY="hp1115-guests";
+const els={}, marks={};
+const $=s=>document.querySelector(s);
+function mk(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+const nameOf=h=>{const v=state[h]||{};return (v.name||"").trim()||G[h].def||""};
+
+function card(h){
+  const g=G[h]; const det=mk("details","gst"); det.id="g-"+h;
+  const sm=mk("summary"); const badge=mk("span","badge","未確定");
+  const st=mk("span","st");
+  st.append(mk("span","ttl",g.time+"｜"+g.ttl), mk("span","org",g.org), mk("span","who",""), mk("span","mm",""));
+  sm.append(badge,st,mk("span","chev","▾"));
+  const body=mk("div","body");
+  const f=(lab,el,id)=>{const w=mk("div");const l=mk("label","",lab);l.htmlFor=id;el.id=id;w.append(l,el);return w};
+  const nm=mk("input"); nm.placeholder=g.def?g.def:"例：山田 花子"; nm.autocomplete="off";
+  const kn=mk("input"); kn.placeholder="例：やまだ はなこ"; kn.autocomplete="off";
+  const me=mk("textarea"); me.placeholder="人数・登場時刻・話題メモなど";
+  const acts=mk("div","acts"); const ok=mk("button","btn","確定して閉じる"); ok.type="button"; const un=mk("button","btn sub","未確定に戻す"); un.type="button"; acts.append(ok,un);
+  body.append(f("お名前（台本の【　】に入ります）",nm,"n-"+h), f("読み方",kn,"k-"+h), f("メモ",me,"m-"+h), acts);
+  det.append(sm,body);
+  const val=done=>({name:nm.value.trim(),kana:kn.value.trim(),memo:me.value.trim(),done});
+  ok.onclick=()=>{save(h,val(true));det.open=false};
+  un.onclick=()=>save(h,val(false));
+  [nm,kn,me].forEach(i=>i.addEventListener("change",()=>save(h,val(!!(state[h]&&state[h].done)))));
+  nm.addEventListener("input",()=>fillMarks(h,nm.value.trim()||g.def||""));
+  els[h]={det,badge,who:st.querySelector(".who"),mm:st.querySelector(".mm"),nm,kn,me};
+  return det;
+}
+function textWithMarks(c,h){
+  const frag=document.createDocumentFragment(); const parts=c.split(/【[\s　]*】/);
+  parts.forEach((p,i)=>{frag.appendChild(document.createTextNode(p)); if(i<parts.length-1){const m=mk("mark","nm");(marks[h]=marks[h]||[]).push(m);frag.appendChild(m)}});
+  return frag;
+}
+function build(){
+  const main=$("#main");
+  D.forEach(H=>{
+    const h=H.h.slice(0,2); const s=mk("section"); s.id="s-"+h;
+    s.appendChild(mk("h2","",h==="12"?"12時台（12:30 中継〜）":H.h));
+    let placed=false;
+    H.rows.forEach(r=>{
+      if(!r){s.appendChild(mk("div","gap"));return}
+      const [t,d,c,n,k]=r;
+      const isG=(h==="12"&&c.includes("長谷川篤司さんをゲスト"))||c.startsWith("本日のゲストは");
+      if(isG&&!placed){s.appendChild(card(h));placed=true}
+      const row=mk("div","row"+(t?" cue":"")+(k==="r"?" r":"")+(k==="b"?" b":"")+(/^[〜～]/.test(c)?" hd":""));
+      const tm=mk("div","tm",t); if(d)tm.appendChild(mk("span","",d));
+      const cc=mk("div","c"); cc.appendChild(textWithMarks(c,h)); if(n)cc.appendChild(mk("span","n",n));
+      row.append(tm,cc); s.appendChild(row);
+    });
+    main.appendChild(s);
+  });
+}
+function fillMarks(h,name){(marks[h]||[]).forEach(m=>{m.textContent=name?name:"　　　　";m.classList.toggle("ok",!!name)})}
+function paint(h){
+  const e=els[h]; if(!e)return; const v=state[h]||{}; const name=nameOf(h);
+  e.det.classList.toggle("done",!!v.done);
+  e.badge.textContent=v.done?"✓ 確定":"未確定";
+  e.who.textContent=name?(name+" さん"+(v.kana?"（"+v.kana+"）":"")):"お名前 未入力（タップして入力）";
+  e.who.classList.toggle("empty",!name);
+  e.mm.textContent=v.memo||"";
+  for(const [k,el] of [["name",e.nm],["kana",e.kn],["memo",e.me]]) if(document.activeElement!==el) el.value=v[k]||"";
+  fillMarks(h,name);
+}
+function roster(){
+  const R=$("#roster"); R.textContent="";
+  Object.keys(G).forEach(h=>{
+    const v=state[h]||{}; const a=mk("a",v.done?"ok":""); a.href="#g-"+h;
+    const b=mk("b","",G[h].time); a.append(b,document.createTextNode(G[h].org));
+    const nm=nameOf(h); a.appendChild(mk("span",nm?"":"empty",nm?nm+" さん":"未入力"));
+    a.onclick=e=>{e.preventDefault();document.getElementById("g-"+h).scrollIntoView({behavior:"smooth",block:"start"})};
+    R.appendChild(a);
+  });
+  const ids=Object.keys(G); const n=ids.filter(h=>state[h]&&state[h].done).length;
+  $("#count").textContent=`${n} / ${ids.length} 確定`; $("#fill").style.width=n/ids.length*100+"%";
+}
+function paintAll(){Object.keys(G).forEach(paint);roster()}
+
+function lineText(){
+  const L=["【ホッチポッチ横浜 ゲスト】"];
+  Object.keys(G).forEach(h=>{const v=state[h]||{};const nm=nameOf(h);
+    L.push(`${v.done?"✓":"・"}${G[h].time} ${G[h].org}：${nm?nm+"さん":"未定"}${v.kana?"（"+v.kana+"）":""}${v.memo?" ／"+v.memo.replace(/\n/g," "):""}`)});
+  return L.join("\n");
+}
+function sendLine(){location.href="https://line.me/R/share?text="+encodeURIComponent(lineText())}
+document.getElementById("send").onclick=sendLine;document.getElementById("send2").onclick=sendLine;
+const pending={},busy={};
+function save(h,v){
+  state[h]=v; paint(h); roster();
+  try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+}
+build();
+try{Object.assign(state,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+paintAll();
+
+</script>
+
+</body>
+</html>
